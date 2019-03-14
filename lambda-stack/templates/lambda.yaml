@@ -1,0 +1,99 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  AWS CloudFormation Sample Template Create API with Lambdas
+
+Parameters:
+  NodeJsZipKey:
+    Type: String
+    Description: Path to the nodejs.zip file inside the s3 bucket
+    Default: node/nodejs.zip
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource:
+                  - "arn:aws:logs:*:*:*"
+              - Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource:
+                  - "arn:aws:dynamodb:*:*:*"
+  GetContractByNumber:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code: 
+        S3Bucket: !ImportValue s3-TemplateBucketName
+        S3Key: !Ref NodeJsZipKey
+      Timeout: 60
+      Handler: index.getContractByNumber
+      MemorySize: 128
+      Runtime: nodejs8.10
+      Role: !GetAtt
+        - LambdaExecutionRole
+        - Arn
+  DeleteContract:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code: 
+        S3Bucket: !ImportValue s3-TemplateBucketName
+        S3Key: !Ref NodeJsZipKey
+      Timeout: 60
+      Handler: index.deleteContract
+      MemorySize: 128
+      Runtime: nodejs8.10
+      Role: !GetAtt
+        - LambdaExecutionRole
+        - Arn
+  UpdateContract:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code: 
+        S3Bucket: !ImportValue s3-TemplateBucketName
+        S3Key: !Ref NodeJsZipKey
+      Timeout: 60
+      Handler: index.updateContract
+      MemorySize: 128
+      Runtime: nodejs8.10
+      Role: !GetAtt
+        - LambdaExecutionRole
+        - Arn
+Outputs:
+  GetContractByNumberArn:
+    Value: !GetAtt 
+          - GetContractByNumber
+          - Arn
+    Description: Arn of GetContractByNumber function
+    Export:
+      Name: lambda-GetContractByNumberArn
+  DeleteContractArn:
+    Value: !GetAtt 
+          - DeleteContract
+          - Arn
+    Description: Arn of GetContractByNumber function
+    Export:
+      Name: lambda-DeleteContractArn
+  UpdateContractArn:
+    Value: !GetAtt 
+          - UpdateContract
+          - Arn
+    Description: Arn of GetContractByNumber function
+    Export:
+      Name: lambda-UpdateContractArn

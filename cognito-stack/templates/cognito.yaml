@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  AWS Template for creating cognito user pool
+  
+Parameters:
+  UserPoolName:
+    Type: String
+    Description: Name of the user pool create
+  AppClientName:
+    Type: String
+    Description: Name of the app client to create
+
+Resources:
+  EncUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AdminCreateUserConfig: 
+        AllowAdminCreateUserOnly: true
+      UserPoolName: !Ref UserPoolName
+      UsernameAttributes: 
+        - email
+      AutoVerifiedAttributes: 
+        - email
+      Schema:
+        - Name: name
+          AttributeDataType: String
+          Mutable: true
+          Required: true
+        - Name: email
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+
+  AppClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+        ClientName: !Ref AppClientName
+        GenerateSecret: false
+        UserPoolId: !Ref EncUserPool   
+Outputs:
+  UserPoolId:
+    Value: !Ref EncUserPool
+    Description: ID of the created User Pool
+  UserPoolProviderName:
+    Value: !GetAtt 
+          - EncUserPool
+          - ProviderName
+    Description: Provider Name of the created User Pool
+  UserPoolProviderURL:
+    Value: !GetAtt 
+          - EncUserPool
+          - ProviderURL
+    Description: Provider URL of the created User Pool
+  UserPoolArn:
+    Value: !GetAtt 
+          - EncUserPool
+          - Arn
+    Description: Name of the created User Pool
+    Export:
+      Name: cognito-UserPoolArn
+  AppClientId:
+    Value: !Ref AppClient
+    Description: ID of the created Client App

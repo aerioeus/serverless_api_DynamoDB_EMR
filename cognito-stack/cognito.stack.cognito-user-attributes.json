@@ -1,0 +1,10 @@
+[
+    {
+        "Name": "email",
+        "Value": "test_user@enc123.com"
+    },
+    {
+        "Name": "name",
+        "Value": "enc_cognito_api_user_1"
+    }
+]

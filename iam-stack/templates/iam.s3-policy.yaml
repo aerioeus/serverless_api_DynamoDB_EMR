@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Configure the IamS3OperationPolicy and assign it to user to enable S3 bucket operations
+
+Parameters:
+  AdministratorAccountName:
+    Type: String
+    Description: AWS user name of the administrator user 
+  # string name of IAM user (not ARM, not AWS Account ID, not Canonical User ID)
+
+Resources:
+  IamOperatePolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: IamS3OperationPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:*
+            Resource: "*"
+      Users:
+        - !Ref AdministratorAccountName

@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  AdministratorAccountName:
+    Type: String
+    Description: AWS user name of the administrator user 
+  # string name of IAM user (not ARM, not AWS Account ID, not Canonical User ID)
+
+Resources:
+  IamDynamodbPolicyStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:               
+        Fn::Sub:
+          - https://s3.${AWS::Region}.amazonaws.com/${S3BucketName}/yaml/iam-stack/templates/iam.masterstack.templates/iam.dynamodb-policy.yaml 
+          - S3BucketName: !ImportValue s3-TemplateBucketName  
+      Parameters:
+        AdministratorAccountName: !Ref AdministratorAccountName
+
+  IamLambdaPolicyStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:               
+        Fn::Sub:
+          - https://s3.${AWS::Region}.amazonaws.com/${S3BucketName}/yaml/iam-stack/templates/iam.masterstack.templates/iam.lambda-policy.yaml 
+          - S3BucketName: !ImportValue s3-TemplateBucketName  
+      Parameters:
+        AdministratorAccountName: !Ref AdministratorAccountName
+
+  IamCognitoPolicyStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:               
+        Fn::Sub:
+          - https://s3.${AWS::Region}.amazonaws.com/${S3BucketName}/yaml/iam-stack/templates/iam.masterstack.templates/iam.cognito-policy.yaml
+          - S3BucketName: !ImportValue s3-TemplateBucketName  
+      Parameters:
+        AdministratorAccountName: !Ref AdministratorAccountName
+
+  IamApigatewayPolicyStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:               
+        Fn::Sub:
+          - https://s3.${AWS::Region}.amazonaws.com/${S3BucketName}/yaml/iam-stack/templates/iam.masterstack.templates/iam.apigateway-policy.yaml 
+          - S3BucketName: !ImportValue s3-TemplateBucketName  
+      Parameters:
+        AdministratorAccountName: !Ref AdministratorAccountName

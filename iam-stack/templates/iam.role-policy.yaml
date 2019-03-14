@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Configure the IamOperateRolePolicy and assign it to user to enable IAM role operations
+
+Parameters:
+  AdministratorAccountName:
+    Type: String
+    Description: AWS user name of the administrator user 
+  # string name of IAM user (not ARM, not AWS Account ID, not Canonical User ID)
+
+Resources:
+  IamOperatePolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: IamOperateRolePolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - iam:GetRole
+              - iam:CreateRole
+              - iam:DeleteRole
+              - iam:GetPolicy
+              - iam:CreatePolicy
+              - iam:DeletePolicy
+              - iam:AttachRolePolicy
+              - iam:DetachRolePolicy
+              - iam:PutRolePolicy
+              - iam:PassRole 
+              - iam:CreateServiceLinkedRole
+            Resource: "*"
+      Users:
+        - !Ref AdministratorAccountName

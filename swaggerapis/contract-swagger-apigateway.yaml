@@ -1,0 +1,150 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Contact Manager - API"
+  description: >
+    This API is intented to enable external users to get information for the resource contacts
+
+# Specifies a request validator, by referencing a request_validator_name
+x-amazon-apigateway-request-validators:
+  body-only:
+    validateRequestBody: true
+    validateRequestParameters: false
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+
+# Specifies the source to receive an API key
+x-amazon-apigateway-api-key-source: HEADER
+
+# list of binary media types to be supported by API Gateway
+x-amazon-apigateway-binary-media-types:
+  - application/json
+  - application/xml
+  - text/plain; charset=utf-8
+  - text/html
+  - application/pdf
+  - image/png
+  - image/gif
+  - image/jpeg
+
+securityDefinitions:
+  enc_user_pool_authorizer_1:
+    type: "apiKey" # Required and the value must be "apiKey" for an API Gateway API.
+    name: "Authorization" # The name of the header containing the authorization token
+    in: "header" # Required and the value must be "header" for an API Gateway API.
+    x-amazon-apigateway-authtype: cognito_user_pools # Specifies the authorization mechanism for the client.
+    x-amazon-apigateway-authorizer: # An API Gateway Lambda authorizer definition
+      type: cognito_user_pools # Required property and the value must "token"
+      providerARNs:
+        #- Ref: EncUserPoolArn
+        - Fn::ImportValue: cognito-UserPoolArn
+
+definitions:
+  Empty:
+    type: "object"
+    title: "Empty Schema"
+
+# API can understand the following media types
+# Note that consumes only affects operations with a request body, such as POST, PUT and PATCH
+# It is ignored for bodiless operations like GET
+consumes:
+  - application/json
+  - application/xml
+  - text/plain; charset=utf-8
+  - text/html
+  - application/pdf
+# API can respond with various media types
+produces:
+  - application/json
+  - application/xml
+  - image/png
+  - image/gif
+  - image/jpeg
+
+schemes:
+  - "https"
+paths:
+  /contract:
+    get:
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Contact selected successfully"
+          schema:
+            $ref: "#/definitions/Empty"
+      security:
+        - enc_user_pool_authorizer_1: []
+      x-amazon-apigateway-request-validator: "params-only"
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":lambda:path/2015-03-31/functions/"
+              - Fn::ImportValue: lambda-GetContractByNumberArn
+              - "/invocations"
+
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+    put:
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Contract updated successfully"
+          schema:
+            $ref: "#/definitions/Empty"
+      security:
+        - enc_user_pool_authorizer_1: []
+      x-amazon-apigateway-request-validator: "body-only"
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":lambda:path/2015-03-31/functions/"
+              - Fn::ImportValue: lambda-UpdateContractArn
+              - "/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+    delete:
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Contract deleted successfully"
+          schema:
+            $ref: "#/definitions/Empty"
+      security:
+        - enc_user_pool_authorizer_1: []
+      x-amazon-apigateway-request-validator: "params-only"
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":lambda:path/2015-03-31/functions/"
+              - Fn::ImportValue: lambda-DeleteContractArn
+              - "/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"

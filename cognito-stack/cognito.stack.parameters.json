@@ -1,0 +1,10 @@
+[
+    {
+        "ParameterKey": "UserPoolName",
+        "ParameterValue": "NEW USER POOL NAME"
+    },
+    {
+        "ParameterKey": "AppClientName",
+        "ParameterValue": "NEW APP CLIENT NAME"
+    }
+]

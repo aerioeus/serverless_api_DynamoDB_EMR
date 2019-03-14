@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Configure the IamDynamoDbOperationPolicy and assign it to user to enable dynamodb operations
+
+Parameters:
+  AdministratorAccountName:
+    Type: String
+    Description: AWS user name of the administrator user 
+  # string name of IAM user (not ARM, not AWS Account ID, not Canonical User ID)
+
+Resources:
+  IamOperatePolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: IamDynamoDbOperationPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:*
+            Resource: "*"
+      Users:
+        - !Ref AdministratorAccountName

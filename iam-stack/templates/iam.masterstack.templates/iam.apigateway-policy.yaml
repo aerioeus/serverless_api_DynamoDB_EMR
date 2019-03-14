@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Configure the IamApiOperationPolicy and assign it to user to enable S3 bucket operations
+
+Parameters:
+  AdministratorAccountName:
+    Type: String
+    Description: AWS user name of the administrator user 
+  # string name of IAM user (not ARM, not AWS Account ID, not Canonical User ID)
+
+Resources:
+  IamOperatePolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: IamApiOperationPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - cloudformation:CreateChangeSet
+              - logs:*
+              - apigateway:*
+            Resource: "*"
+      Users:
+        - !Ref AdministratorAccountName
+
+  ApiGwAccountConfig:
+      Type: "AWS::ApiGateway::Account"
+      Properties:
+        CloudWatchRoleArn: !GetAtt "ApiGatewayLoggingRole.Arn"
+  ApiGatewayLoggingRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - "apigateway.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Path: "/"
+      ManagedPolicyArns:
+        - !Sub "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+  # ApiLambdaExecutionRole:
+  #   Type: AWS::IAM::Role
+  #   Properties: 
+  #     AssumeRolePolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service: apigateway.amazonaws.com
+  #           Action: 
+  #             - sts:AssumeRole
+  #     Path: /
+  #     Policies:
+  #       - PolicyName: root
+  #         PolicyDocument:
+  #           Version: 2012-10-17
+  #           Statement:
+  #             - Effect: Allow
+  #               Action:
+  #                 - lambda:InvokeFunction
+  #               Resource:
+  #                 - "arn:aws:execute-api:*:*:*"
+

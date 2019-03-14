@@ -1,0 +1,19 @@
+{
+  "name": "enc-aws-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.416.0"
+  },
+  "devDependencies": {
+    "@types/node": "^11.10.5",
+    "typescript": "^3.3.3333"
+  }
+}
