@@ -122,8 +122,10 @@ Actions required to be able to deploy the solution:
   ```shell
     npm install -g typescript
   ```
-  #### 2.12 Fow windows users it is required to install 7zip program because Windows has no inline utilities for creating zip archives. 7z command is used inside the Windows deployment script to create am archive with the .js code. 
+  #### 2.12 For Windows users it is required to install 7zip program because Windows has no inline utilities for creating zip archives. 7z command is used inside the Windows deployment script to create am archive with the .js code. 
   You can install it from here https://www.7-zip.org/download.html (it's free). Then you need to add the folder with the 7z.exe to Path environment variable (example here - https://help.goodsync.com/hc/en-us/articles/360007773451-Automated-Backup-with-Compression-and-Encryption ).
+
+  #### 2.13 For Linux/Mac you need the 'zip' program to be installed. zip command is used inside the Windows deployment script to create am archive with the .js code. 
 
 ## 3. Deployment
 
@@ -134,7 +136,7 @@ Before you start the deploy you have to:
     (Add CloudformationCreateStackPolicy and assign CloudformationCreateStackPolicy to your AWS admin user)
 - give iam:GetUserPolicy, iam:PutUserPolicy, iam:DeleteUserPolicy permissions manually to your administrator account
     (Add IAMOperateUserPolicy and assign IAMGetRolePolicy to your AWS admin user)
-- review all XXX.stack.parameters.json files and change the default values to the ones required for the solution (s3 bucketname, user pool name, etc.)
+- review all XXX.stack.parameters.json files and change the default values to the ones required for the solution (s3 bucketname, user pool name, etc.) - See #3.1
 
 After that:
 
@@ -144,7 +146,7 @@ After that:
   - /s3-stack/s3.stack.parameters.json
 #### 3.2 Open your console terminal
 #### 3.3 Change current folder to the root folder of this project
-#### 3.4 Run the 'deploy/master.stack.deploy.windows.bat' command in your terminal (for Windows)
+#### 3.4 Run the 'deploy/master.stack.deploy.windows.bat' command in your terminal (for Windows) or 'deploy/master.stack.deploy.linux.sh' command in your terminal (for Linux/Mac)
 #### 3.5 Check the resulting API access url in the 'api-created.result.txt' file in the root folder of this project
 
 
@@ -209,17 +211,10 @@ That's why the testing process is the following
     - GetContractByNumber : {  "queryStringParameters": {    "number": "CN-0908-00108"  }}
     - DeleteContract: {  "queryStringParameters": {    "number": "CN-0908-00105"  }}
     - UpdateContract: 
-      {
-        "body": {
-          "newItem": {
-        "ctr_number": "CN-0908-00106",
-        "ctr_signed_by": "John1 Doe2, ABC LLP, Paris",
-        "ctr_signed_on": "10.12.2010",
-        "ctr_term_start": "24.02.2011",
-        "ctr_terminated": "yes"
-          }
-        }
-      }
+  {
+    "body": {
+      "newItem": {"ctr_number": "CN-0908-00106","ctr_signed_by": "John1 Doe2, ABC LLP, Paris","ctr_signed_on": "10.12.2010","ctr_term_start": "24.02.2011","ctr_terminated": "yes"}  }
+  }
 
 ## 5. Clean up
 
