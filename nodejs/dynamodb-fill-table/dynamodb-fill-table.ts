@@ -63,11 +63,11 @@ function addItemToDb(item:any, tableName: string, docClient:any){
     });
 }
 
-let i = 101;
+let i = 100;
 
 var timerId = setInterval(() => {
     addItemToDb(getNewItem(i++), tableName, dynamoDoc);
-    if (i > 110){
+    if (i > 200){
         clearInterval(timerId);
     }
   }, 1500);

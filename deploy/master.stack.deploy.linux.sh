@@ -38,7 +38,6 @@ echo "Create s3-stack. DONE"
 
 echo "Retrieve the s3 bucket name"
 
-
 S3BucketName="$(aws cloudformation describe-stacks --stack-name s3-stack --query "Stacks[0].Outputs[?OutputKey=='S3BucketName'].OutputValue" --output text)" 
 echo S3BucketName=$S3BucketName
 
