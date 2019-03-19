@@ -133,8 +133,23 @@ call aws cloudformation wait stack-create-complete --stack-name lambda-stack
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
+REM Replace the 'ZipPathTimeStamp' with the value of '%ZipPathTimeStamp%' and write result into the new file
+@echo off &setlocal
+set "search=ZipPathTimeStamp"
+set "replace=%ZipPathTimeStamp%"
+set "textfile=cognito-stack/cognito.stack.parameters.json"
+set "newfile=cognito-stack/cognito.stack.parameters.tmp.json"
+(for /f "delims=" %%i in (%textfile%) do (
+    set "line=%%i"
+    setlocal enabledelayedexpansion
+    set "line=!line:%search%=%replace%!"
+    echo(!line!
+    endlocal
+))>"%newfile%"
+
+
 @echo "Create cognito-stack. It creates Cognito infrastructure"
-call aws cloudformation create-stack --stack-name cognito-stack --template-body file://cognito-stack/templates/cognito.yaml --output text --parameters file://cognito-stack/cognito.stack.parameters.json
+call aws cloudformation create-stack --stack-name cognito-stack --template-body file://cognito-stack/templates/cognito.yaml --output text --capabilities CAPABILITY_IAM --parameters file://cognito-stack/cognito.stack.parameters.tmp.json 
 
 @echo "Create cognito-stack. WAITING ..." 
 call aws cloudformation wait stack-create-complete --stack-name cognito-stack
@@ -148,9 +163,6 @@ set command=call aws cloudformation describe-stacks --stack-name cognito-stack -
 for /f "usebackq" %%A in (`%command%`) do set "UserPoolId=%%A"
 @echo UserPoolId=%UserPoolId%
 
-@echo "Add domain to the user pool since it's not possible through the template"
-call aws cognito-idp create-user-pool-domain --domain file://cognito-stack/cognito.stack.domain.json --user-pool-id %UserPoolId% 
-
 @echo "Retrieve the ID of the new app client"
 
 @echo off
@@ -158,18 +170,6 @@ set command=call aws cloudformation describe-stacks --stack-name cognito-stack -
 
 for /f "usebackq" %%A in (`%command%`) do set "AppClientId=%%A"
 @echo AppClientId=%AppClientId%
-
-@echo "Set user pool client since it's not possible through the template"
-@echo off 
-REM use '["https://www.example.com"]' according to thids issue https://github.com/aws/aws-cli/issues/2894
-call aws cognito-idp update-user-pool-client --user-pool-id %UserPoolId% --client-id %AppClientId% --allowed-o-auth-flows-user-pool-client --allowed-o-auth-flows "implicit" --allowed-o-auth-scopes "openid" "phone" "email" "profile" "aws.cognito.signin.user.admin" --supported-identity-providers "COGNITO" --callback-urls file://cognito-stack/cognito.stack.callback-urls.json
-
-
-@echo "Create a user since it's not possible to create a user with the temporary password through the template"
-call aws cognito-idp admin-create-user --user-pool-id %UserPoolId% --username test_user@enc123.com --temporary-password 123!Aws8 --user-attributes file://cognito-stack/cognito.stack.cognito-user-attributes.json
-
-
-@echo "Manual user login will be required to change the temporary password"
 
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------

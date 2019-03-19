@@ -9,6 +9,24 @@ Parameters:
   AppClientName:
     Type: String
     Description: Name of the app client to create
+  SubDomainName:
+    Type: String
+    Description: Name of the app client to create
+  NodeJsZipKey:
+    Type: String
+    Description: Path to the nodejs.zip file inside the s3 bucket
+  CallbackUrls:
+    Type: CommaDelimitedList
+    Description: The list of CallbackUrls for the ClientApp
+  TestUserEmail:
+    Type: String
+    Description: Email of the test user to create
+  TestUserName:
+    Type: String
+    Description: Name of the test user to create
+  TestUserTempPassword:
+    Type: String
+    Description: Temp password of the test user to create
 
 Resources:
   EncUserPool:
@@ -37,6 +55,70 @@ Resources:
         ClientName: !Ref AppClientName
         GenerateSecret: false
         UserPoolId: !Ref EncUserPool   
+
+  LambdaCognitoExecutionRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource:
+                  - "arn:aws:logs:*:*:*"
+              - Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource:
+                  - "arn:aws:dynamodb:*:*:*"
+              - Effect: Allow
+                Action:
+                  - cognito-idp:*
+                Resource:
+                  - "arn:aws:cognito-idp:*:*:*"
+
+  CustomDomainLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: domainCustomCreator
+      Code:
+        S3Bucket:
+          Fn::ImportValue: s3-TemplateBucketName
+        S3Key: !Ref NodeJsZipKey
+      Handler: index.operateCustomDomain
+      Role:
+        Fn::GetAtt: 
+          - LambdaCognitoExecutionRole
+          - Arn
+      Runtime: nodejs8.10
+      Timeout: 180
+
+  CustomDomainCreator:
+    Type: Custom::CustomDomainCreator
+    Properties:
+      ServiceToken: !GetAtt CustomDomainLambda.Arn
+      UserPoolId: !Ref EncUserPool
+      DomainName: !Ref SubDomainName
+      GenerateRandomIfNotAvailable: !Ref SubDomainName
+      CallbackUrls: !Ref CallbackUrls
+      AppClientId: !Ref AppClient
+      TestUserEmail: !Ref TestUserEmail
+      TestUserName: !Ref TestUserName
+      TestUserTempPassword: !Ref TestUserTempPassword
+      # CertificateArn:
+      #   Fn::ImportValue: !Sub ${EnvironmentName}-DNSCertificateARN3
 Outputs:
   UserPoolId:
     Value: !Ref EncUserPool

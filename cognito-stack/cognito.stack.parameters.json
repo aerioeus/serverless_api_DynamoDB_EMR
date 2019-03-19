@@ -1,10 +1,34 @@
 [
     {
         "ParameterKey": "UserPoolName",
-        "ParameterValue": "NEW USER POOL NAME"
+        "ParameterValue": "enc_user_pool_2"
     },
     {
         "ParameterKey": "AppClientName",
-        "ParameterValue": "NEW APP CLIENT NAME"
+        "ParameterValue": "enc_cognito_client_2"
+    },
+    {
+        "ParameterKey": "SubDomainName",
+        "ParameterValue": "enc-auth"
+    },
+    {
+        "ParameterKey": "CallbackUrls",
+        "ParameterValue": "https://www.example.com,https://www.example1.com"
+    },
+    {
+        "ParameterKey": "NodeJsZipKey",
+        "ParameterValue": "ZipPathTimeStamp/nodejs.zip"
+    },
+    {
+        "ParameterKey": "TestUserEmail",
+        "ParameterValue": "test_user@enc123.com"
+    },
+    {
+        "ParameterKey": "TestUserName",
+        "ParameterValue": "enc_cognito_api_user_1"
+    },
+    {
+        "ParameterKey": "TestUserTempPassword",
+        "ParameterValue": "Aa12345@"
     }
 ]

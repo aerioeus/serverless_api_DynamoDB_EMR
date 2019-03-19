@@ -79,9 +79,11 @@ zip -qr nodejs.zip .
 
 echo Retreive timestamp
 
-ZipPathTimeStamp=node/$(date +%F_%H-%M-%S)
+DateTimeStamp=$(date +%F_%H-%M-%S)
 
-echo PathWithTimeStamp=$ZipPathTimeStamp
+ZipPathTimeStamp=node/$DateTimeStamp
+
+echo ZipPathTimeStamp=$ZipPathTimeStamp
 
 echo "Deploy the node zip to s3 bucket. Use timestamp to mark the latest code archive"
  
@@ -122,8 +124,15 @@ echo "Create lambda-stack. DONE"
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
+echo "Replace path to nodejs.zip in the copied cognito params file"
+ZipPathTimeStampSlash=node\/$DateTimeStamp
+echo ZipPathTimeStampSlash=$ZipPathTimeStampSlash
+
+sed -e "s/ZipPathTimeStamp/$ZipPathTimeStamp/g" cognito-stack/cognito.stack.parameters.json > cognito-stack/cognito.stack.parameters.tmp.json
+
+
 echo "Create cognito-stack. It creates Cognito infrastructure"
-aws cloudformation create-stack --stack-name cognito-stack --template-body file://cognito-stack/templates/cognito.yaml --output text --parameters file://cognito-stack/cognito.stack.parameters.json
+aws cloudformation create-stack --stack-name cognito-stack --template-body file://cognito-stack/templates/cognito.yaml --output text --parameters file://cognito-stack/cognito.stack.parameters.tmp.json
 
 echo "Create cognito-stack. WAITING ..." 
 aws cloudformation wait stack-create-complete --stack-name cognito-stack
@@ -134,27 +143,10 @@ echo "Retrieve the ID of the new user pool"
 UserPoolId="$(aws cloudformation describe-stacks --stack-name cognito-stack --query "Stacks[0].Outputs[?OutputKey=='UserPoolId'].OutputValue" --output text)"
 echo UserPoolId=$UserPoolId
 
-echo "Add domain to the user pool since it's not possible through the template"
-aws cognito-idp create-user-pool-domain --domain file://cognito-stack/cognito.stack.domain.json --user-pool-id $UserPoolId
-
 echo "Retrieve the ID of the new app client"
-
 
 AppClientId="$(aws cloudformation describe-stacks --stack-name cognito-stack --query "Stacks[0].Outputs[?OutputKey=='AppClientId'].OutputValue" --output text)"
 echo AppClientId=$AppClientId
-
-echo "Set user pool client since it's not possible through the template"
- 
-# use '["https://www.example.com"]' according to thids issue https://github.com/aws/aws-cli/issues/2894
-aws cognito-idp update-user-pool-client --user-pool-id $UserPoolId --client-id $AppClientId --allowed-o-auth-flows-user-pool-client --allowed-o-auth-flows "implicit" --allowed-o-auth-scopes "openid" "phone" "email" "profile" "aws.cognito.signin.user.admin" --supported-identity-providers "COGNITO" --callback-urls file://cognito-stack/cognito.stack.callback-urls.json
-
-
-echo "Create a user since it's not possible to create a user with the temporary password through the template"
-aws cognito-idp admin-create-user --user-pool-id $UserPoolId --username test_user@enc123.com --temporary-password Aa12345@ --user-attributes file://cognito-stack/cognito.stack.cognito-user-attributes.json
-
-
-echo "Manual user login will be required to change the temporary password"
-
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 echo "Create api-stack. It creates ApiGateway infrastructure"
@@ -163,7 +155,6 @@ aws cloudformation create-stack --stack-name api-stack --template-body file://ap
 echo "Create api-stack. WAITING ..." 
 aws cloudformation wait stack-create-complete --stack-name api-stack
 echo "Create api-stack. DONE" 
-
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
