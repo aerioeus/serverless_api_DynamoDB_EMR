@@ -1,10 +1,10 @@
-import {tableName} from '../../shared/shared.module';
-import {dynamoDoc} from '../../shared/shared.module';
+import { awsConfig } from "../../aws-config";
+import { dynamoDoc } from "../../dynamodb/dynamodb.module";
 
 export function updateContractFunc(newItem: any){
 
     var params = {
-        TableName:tableName,
+        TableName: awsConfig.dynamoDbTableName,
         Key:{
             "ctr_number": newItem.ctr_number
         },

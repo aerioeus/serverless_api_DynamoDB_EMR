@@ -5,9 +5,9 @@ import {operateCognitoCustomDomain } from './cognito/cognitoCustomDomain';
 import AWS from 'aws-sdk';
 import { awsConfig } from './aws-config';
 import { updateUserPool, createUserPoolUser } from './cognito/cognitoUserPool';
+import { fillDynamoDbTable } from './dynamodb/dynamodb.module';
 
-
-AWS.config.update({region:awsConfig.region});
+AWS.config.update({region:awsConfig.region}, true);
 
 AWS.config.apiVersions = {
     cognitoidentityserviceprovider: awsConfig.apiVersion,
@@ -87,7 +87,7 @@ export const updateContract = async (event: any) => {
     }
 }
 
-export const operateCustomDomain = async (event: any) => {
+export const setupCognitoStack = async (event: any) => {
     await setupCognitoStack(event);
 }
 
@@ -103,7 +103,7 @@ function returnError(e:Error) {
     return responseErr;
 }
 
-async function setupCognitoStack(event: any) {
+async function operateCustomDomain(event: any) {
     let arr: any[] = [];
     
     //don't wait for any operation separately to save lambda time-costs
@@ -117,3 +117,5 @@ async function setupCognitoStack(event: any) {
 
     await Promise.all(arr);
 }
+
+fillDynamoDbTable();

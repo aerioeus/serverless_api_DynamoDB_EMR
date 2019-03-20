@@ -97,7 +97,7 @@ Resources:
         S3Bucket:
           Fn::ImportValue: s3-TemplateBucketName
         S3Key: !Ref NodeJsZipKey
-      Handler: index.operateCustomDomain
+      Handler: index.setupCognitoStack
       Role:
         Fn::GetAtt: 
           - LambdaCognitoExecutionRole

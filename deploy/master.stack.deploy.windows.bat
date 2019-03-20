@@ -118,7 +118,7 @@ call aws cloudformation wait stack-create-complete --stack-name dynamodb-stack
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
 @echo "Fill table with fake data"
-call node nodejs/dynamodb-fill-table/dynamodb-fill-table.js
+call node -e 'require(\"./nodejs/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 20)'
 
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------

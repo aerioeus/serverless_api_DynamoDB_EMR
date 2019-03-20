@@ -28,137 +28,29 @@ Resources:
     Type: 'AWS::DynamoDB::Table'
     Properties:
       AttributeDefinitions:
-        - AttributeName: ctr_number
+        - AttributeName: pk_id
           AttributeType: S
-        - AttributeName: ctr_pdt_cat_type
+        - AttributeName: sk
           AttributeType: S
-        - AttributeName: ctr_valid_from
+        - AttributeName: gsi_1_sk
           AttributeType: S
-        - AttributeName: ctr_valid_to
-          AttributeType: S
-        - AttributeName: ctr_terminated
-          AttributeType: S
-        - AttributeName: org_name
-          AttributeType: S
-        - AttributeName: podn_partner_type
-          AttributeType: S
-        # - AttributeName: ctr_rel_type
-        #   AttributeType: S
-        # - AttributeName: ctr_service
-        #   AttributeType: S
-        # - AttributeName: ctr_signed_on
-        #   AttributeType: S
-        # - AttributeName: ctr_term_start
-        #   AttributeType: S
-        # - AttributeName: ctr_term
-        #   AttributeType: S
-        # - AttributeName: ctr_term_comment
-        #   AttributeType: S
-        # - AttributeName: ctr_notice_period
-        #   AttributeType: N
-        # - AttributeName: ctr_notice_period_unit
-        #   AttributeType: S
-        # - AttributeName: ctr_termination_point_in_time
-        #   AttributeType: S
-        # - AttributeName: ctr_notice_given_on
-        #   AttributeType: S
-        # - AttributeName: ctr_notice_given_to
-        #   AttributeType: S
-        # - AttributeName: ctr_commercial_chargeable_demand
-        #   AttributeType: S
-        # - AttributeName: ctr_commercial_chargeable_demand_unit
-        #   AttributeType: S
-        # - AttributeName: ctr_automatic_contract_extension
-        #   AttributeType: S
-        # - AttributeName: ctr_automatic_contract_extension_unit
-        #   AttributeType: S
-        # - AttributeName: ctr_comment
-        #   AttributeType: S
-        # - AttributeName: org_street
-        #   AttributeType: S
-        # - AttributeName: org_zip_code
-        #   AttributeType: S
-        # - AttributeName: org_place
-        #   AttributeType: S
-        # - AttributeName: cont_email
-        #   AttributeType: S
-        # - AttributeName: cont_fist_name
-        #   AttributeType: S
-        # - AttributeName: cont_surname
-        #   AttributeType: S
       KeySchema:
-        - AttributeName: ctr_number
+        - AttributeName: pk_id
           KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
       GlobalSecondaryIndexes:
-        - IndexName: ValidFromIndex
+        - IndexName: Gsi1Index
           KeySchema:
-            - AttributeName: ctr_valid_from
+            - AttributeName: sk
               KeyType: HASH
-            - AttributeName: ctr_terminated
+            - AttributeName: gsi_1_sk
               KeyType: RANGE
           Projection:
-            ProjectionType: INCLUDE
-            NonKeyAttributes: 
-              - ctr_number
-              - ctr_valid_from
-              - ctr_valid_to
-              - ctr_terminated
-              - ctr_notice_period
-              - ctr_notice_period_unit
-              - ctr_automatic_contract_extension
-              - ctr_automatic_contract_extension_unit
-          ProvisionedThroughput:
-            ReadCapacityUnits: !Ref ReadCapacityUnits
-            WriteCapacityUnits: !Ref WriteCapacityUnits
-        - IndexName: ValidToIndex
-          KeySchema:
-            - AttributeName: ctr_valid_to
-              KeyType: HASH
-          Projection:
-            ProjectionType: INCLUDE
-            NonKeyAttributes: 
-              - ctr_number
-              - ctr_valid_from
-              - ctr_valid_to
-              - ctr_terminated
-              - ctr_notice_period
-              - ctr_notice_period_unit
-              - ctr_automatic_contract_extension
-              - ctr_automatic_contract_extension_unit
-              - ctr_comment
-          ProvisionedThroughput:
-            ReadCapacityUnits: !Ref ReadCapacityUnits
-            WriteCapacityUnits: !Ref WriteCapacityUnits
-        - IndexName: ProductCategoryTypeIndex
-          KeySchema:
-            - AttributeName: ctr_pdt_cat_type
-              KeyType: HASH
-          Projection:
-            ProjectionType: INCLUDE
-            NonKeyAttributes: 
-              - ctr_number
-              - ctr_valid_from
-              - ctr_valid_to
-              - ctr_pdt_cat_type
-          ProvisionedThroughput:
-            ReadCapacityUnits: !Ref ReadCapacityUnits
-            WriteCapacityUnits: !Ref WriteCapacityUnits
-        - IndexName: PartnerTypeIndex
-          KeySchema:
-            - AttributeName: podn_partner_type
-              KeyType: HASH
-            - AttributeName: org_name
-              KeyType: RANGE
-          Projection:
-            ProjectionType: INCLUDE
-            NonKeyAttributes: 
-              - org_name
-              - org_street
-              - org_zip_code
-              - org_place
+            ProjectionType: ALL
           ProvisionedThroughput:
             ReadCapacityUnits: !Ref ReadCapacityUnits
             WriteCapacityUnits: !Ref WriteCapacityUnits

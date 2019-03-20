@@ -1,9 +1,9 @@
-import {tableName} from '../../shared/shared.module';
-import {dynamoDoc} from '../../shared/shared.module';
+import { awsConfig } from "../../aws-config";
+import { dynamoDoc } from "../../dynamodb/dynamodb.module";
 
 export function getContractByNumberFunc(number:string){
     var params = {
-        TableName : tableName,
+        TableName : awsConfig.dynamoDbTableName,
         KeyConditionExpression : 'ctr_number = :contract_number',
         ExpressionAttributeValues : {
             ':contract_number' : number

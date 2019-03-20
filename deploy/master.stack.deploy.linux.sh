@@ -109,8 +109,7 @@ echo "Create dynamodb-stack. DONE"
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "Fill table with fake data"
-node nodejs/dynamodb-fill-table/dynamodb-fill-table.js
-
+node -e 'require(\"./nodejs/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 20)'
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 

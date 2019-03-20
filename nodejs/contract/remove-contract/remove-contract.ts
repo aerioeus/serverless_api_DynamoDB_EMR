@@ -1,9 +1,9 @@
-import {tableName} from '../../shared/shared.module';
-import {dynamoDoc} from '../../shared/shared.module';
+import { awsConfig } from "../../aws-config";
+import { dynamoDoc } from "../../dynamodb/dynamodb.module";
 
 export function deleteContractFunc(number:string){
     var params = {
-        TableName : tableName,
+        TableName : awsConfig.dynamoDbTableName,
         Key: {
             "ctr_number": number
         }
