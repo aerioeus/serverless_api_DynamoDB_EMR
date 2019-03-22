@@ -69,3 +69,5 @@ nodejs/nodejs.zip
 api-created.result.txt
 
 cognito-stack/cognito.stack.parameters.tmp.json
+
+.vscode/

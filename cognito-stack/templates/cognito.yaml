@@ -92,7 +92,7 @@ Resources:
   CustomDomainLambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: domainCustomCreator
+      FunctionName: domainCustomCreatorLbFunc
       Code:
         S3Bucket:
           Fn::ImportValue: s3-TemplateBucketName
@@ -106,7 +106,7 @@ Resources:
       Timeout: 180
 
   CustomDomainCreator:
-    Type: Custom::CustomDomainCreator
+    Type: Custom::CustomDomainCreatorFunction
     Properties:
       ServiceToken: !GetAtt CustomDomainLambda.Arn
       UserPoolId: !Ref EncUserPool

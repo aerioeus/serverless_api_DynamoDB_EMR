@@ -5,7 +5,6 @@ import {operateCognitoCustomDomain } from './cognito/cognitoCustomDomain';
 import AWS from 'aws-sdk';
 import { awsConfig } from './aws-config';
 import { updateUserPool, createUserPoolUser } from './cognito/cognitoUserPool';
-import { fillDynamoDbTable } from './dynamodb/dynamodb.module';
 
 AWS.config.update({region:awsConfig.region}, true);
 
@@ -88,7 +87,7 @@ export const updateContract = async (event: any) => {
 }
 
 export const setupCognitoStack = async (event: any) => {
-    await setupCognitoStack(event);
+    await operateCustomDomain(event);
 }
 
 function returnError(e:Error) {
@@ -117,5 +116,3 @@ async function operateCustomDomain(event: any) {
 
     await Promise.all(arr);
 }
-
-fillDynamoDbTable();

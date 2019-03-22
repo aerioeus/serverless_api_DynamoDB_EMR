@@ -59,6 +59,8 @@ Outputs:
   TableName:
     Value: !Ref NewTable
     Description: Name of the newly created DynamoDB table
+    Export:
+      Name: dynamodb-TableName
   TableArn:
     Value: !GetAtt 
           - NewTable
