@@ -1,20 +1,26 @@
 import moment from 'moment';
+import uuid = require('uuid');
 
 export function getNewCustomerContractItem(index: any, customer: any){
     const contract_period = oneOf([24, 36, 48, 60]);
     const contract_start_date = getRandomDate(2014, 2);
     const contract_valid_to = moment(contract_start_date).add(contract_period, "months").add(-1, "days").format('MM/DD/YYYY');
+    const contract_partner_type = oneOf(["Customer","Supplier","Other"]);
 
     let item = {
             db_item: {
+                item_Id: `${uuid.v4().toString()}-fake`,
+                item_timestamp: getCurrentDateTimeLikeAws(),
                 pk_id: `ENN-000${index}`,
                 sk: contract_start_date,
                 gsi_1_sk: contract_valid_to,
+                gsi_2_sk: contract_partner_type,
                 product_category_type: oneOf(['Pacht', 'Errichtung','Abkauf']),
                 contract_terminated: index % 2 == 0 ? 'no' : 'yes',
+                contract_partner_type: contract_partner_type,
                 contract_info: {
                     signed_on: getRandomDate(2000, 10),
-                    signed_by: `${customer.customer_contact_person_first_name} ${customer.customer_contact_person_last_name}, ${customer.customer_organization_name}, ${customer.customer_billing_address_place}`,
+                    signed_by: `${customer.customer_contact_person.customer_contact_person_first_name} ${customer.customer_contact_person.customer_contact_person_last_name}, ${customer.customer_organization_name}, ${customer.customer_billing_address.customer_billing_address_place}`,
                     contract_period: contract_period,
                     automatic_contract_renewal: contract_period,
                     contract_valid_to: contract_valid_to,
@@ -83,10 +89,12 @@ function getNewCustomerItem(index:any){
     const hasRepresentative = index % 2 == 0;
     
     let item = {
+        item_Id: `${uuid.v4().toString()}-fake`,
+        item_timestamp: getCurrentDateTimeLikeAws(),
         sk: customer_type,
         gsi_1_sk: customer_type,
+        gsi_2_sk: city,
         customer_id:	`C-0001-1002-${index}`,
-        //customer_type:	customer_type,
         customer_organization_name:	`${orgName} Ltd.`,
         customer_individual_name: "n/a",
         customer_quality_of_relationship: 1 + getRandom(4),
@@ -109,7 +117,7 @@ function getNewCustomerItem(index:any){
             customer_contact_person_title_add_on: "Md",	
             customer_contact_person_first_name:	name,
             customer_contact_person_middle_name: middleName,
-            customer_contact_person_surname: lastName,
+            customer_contact_person_last_name: lastName,
             customer_contact_person_function: oneOf(functions),
             customer_contact_person_email: `${name.toLowerCase()}.${lastName.toLowerCase()}@${orgName.toLowerCase()}.com`,
             customer_contact_person_telefon: "+4930555111222",
@@ -229,11 +237,15 @@ export function oneOf(items: any[]){
 }
 
 function getRandomDate(yearBase: number, yearIncr: number){
-    return `${zeroPad(getRandom(12), 2)}/${zeroPad(getRandom(28), 2)}/${yearBase +  getRandom(yearIncr)}`;
+    return `${zeroPad(1 + getRandom(11), 2)}/${zeroPad(1 + getRandom(27), 2)}/${yearBase +  getRandom(yearIncr)}`;
 }
 
 function zeroPad(value: number, size: number){
     var s = String(value);
     while (s.length < (size || 2)) {s = "0" + s;}
     return s;
+}
+
+function getCurrentDateTimeLikeAws(){
+    return moment(new Date()).format('MMM/DD/YYYY:hh:mm:ss +0000');
 }

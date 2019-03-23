@@ -42,6 +42,39 @@ Resources:
       Path: "/"
       ManagedPolicyArns:
         - !Sub "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+
+  APIDatamappingDynamoDBRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - "apigateway.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:Scan
+                  - dynamodb:Query
+                Resource:
+                  - "*"
+              - Effect: Allow
+                Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+                Resource: '*'
+
   # ApiLambdaExecutionRole:
   #   Type: AWS::IAM::Role
   #   Properties: 
@@ -64,4 +97,13 @@ Resources:
   #                 - lambda:InvokeFunction
   #               Resource:
   #                 - "arn:aws:execute-api:*:*:*"
+
+Outputs:
+  APIDatamappingDynamoDBRole:
+    Description: The Arn of APIDatamappingDynamoDBRole (for API stack)
+    Value: !GetAtt 
+      - APIDatamappingDynamoDBRole
+      - Arn
+    Export:
+      Name: iam-APIDatamappingDynamoDBRoleArn
 

@@ -123,12 +123,12 @@ call node -e 'require(\"./nodejs/dynamodb/dynamodb.module\").fillDynamoDbTable(2
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
-@echo "Create lambda-stack. It creates the Lambda functions " 
-call aws cloudformation create-stack --stack-name lambda-stack --template-body file://lambda-stack/templates/lambda.yaml --output text --capabilities CAPABILITY_IAM --parameters ParameterKey=NodeJsZipKey,ParameterValue=%ZipPathTimeStamp%/nodejs.zip
+REM @echo "Create lambda-stack. It creates the Lambda functions " 
+REM call aws cloudformation create-stack --stack-name lambda-stack --template-body file://lambda-stack/templates/lambda.yaml --output text --capabilities CAPABILITY_IAM --parameters ParameterKey=NodeJsZipKey,ParameterValue=%ZipPathTimeStamp%/nodejs.zip
 
-@echo "Create lambda-stack. WAITING ..." 
-call aws cloudformation wait stack-create-complete --stack-name lambda-stack
-@echo "Create lambda-stack. DONE" 
+REM @echo "Create lambda-stack. WAITING ..." 
+REM call aws cloudformation wait stack-create-complete --stack-name lambda-stack
+REM @echo "Create lambda-stack. DONE" 
 
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -174,7 +174,7 @@ for /f "usebackq" %%A in (`%command%`) do set "AppClientId=%%A"
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 @echo "Create api-stack. It creates ApiGateway infrastructure"
-call aws cloudformation create-stack --stack-name api-stack --template-body file://api-stack/templates/api.yaml --output text --capabilities CAPABILITY_IAM  CAPABILITY_AUTO_EXPAND --parameters ParameterKey=S3BucketName,ParameterValue=%S3BucketName%
+call aws cloudformation create-stack --stack-name api-stack --template-body file://api-stack/templates/api.customer.yaml --output text --capabilities CAPABILITY_IAM  CAPABILITY_AUTO_EXPAND --parameters ParameterKey=S3BucketName,ParameterValue=%S3BucketName%
 
 @echo "Create api-stack. WAITING ..." 
 call aws cloudformation wait stack-create-complete --stack-name api-stack

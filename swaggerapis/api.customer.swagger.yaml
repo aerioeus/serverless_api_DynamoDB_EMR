@@ -1,0 +1,497 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Contact Manager - API"
+  description: >
+    This API is intented to enable external users to get information for the resource contacts
+
+# Specifies a request validator, by referencing a request_validator_name
+# x-amazon-apigateway-request-validators:
+#   body-only:
+#     validateRequestBody: true
+#     validateRequestParameters: false
+#   params-only:
+#     validateRequestBody: false
+#     validateRequestParameters: true
+
+# Specifies the source to receive an API key
+x-amazon-apigateway-api-key-source: HEADER
+
+securityDefinitions:
+  enc_user_pool_authorizer_1:
+    type: "apiKey" # Required and the value must be "apiKey" for an API Gateway API.
+    name: "Authorization" # The name of the header containing the authorization token
+    in: "header" # Required and the value must be "header" for an API Gateway API.
+    x-amazon-apigateway-authtype: cognito_user_pools # Specifies the authorization mechanism for the client.
+    x-amazon-apigateway-authorizer: # An API Gateway Lambda authorizer definition
+      type: cognito_user_pools # Required property and the value must "token"
+      providerARNs:
+        - Fn::ImportValue: cognito-UserPoolArn
+  api_key: 
+    type: "apiKey"
+    name: "x-api-key"
+    in: "header"
+
+schemes:
+  - "https"
+paths:
+  /customer/{contract_id}:
+    get:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "contract_id"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Customer selected successfully"
+          schema:
+            $ref: "#/definitions/CustomerResponseModel"
+      security:
+        - enc_user_pool_authorizer_1: []
+        - api_key: []
+      x-amazon-apigateway-integration:
+        credentials: 
+          Fn::ImportValue: iam-APIDatamappingDynamoDBRoleArn
+        uri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":dynamodb:action/Query"
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              application/json: "$input.json('$.Items')"
+        requestParameters:
+          integration.request.header.Content-Type: "'application/x-amz-json-1.0'"
+        requestTemplates:
+          application/json: 
+            Fn::Join:
+            - ''
+            - - '{"TableName":"'
+              - Fn::ImportValue: dynamodb-TableName
+              - >-
+                ", 
+                  "KeyConditionExpression": "pk_id = :pk_id_val and sk = :sk_val", 
+                  "ExpressionAttributeValues": 
+                  { 
+                    ":pk_id_val": { "S": "$input.params('contract_id')" }, 
+                    ":sk_val": { "S": "Company" }
+                  }
+                }
+        passthroughBehavior: "when_no_templates"
+        contentHandling: "CONVERT_TO_TEXT"
+        httpMethod: "POST"
+        type: "aws"
+  /customers/represented/{represented}:
+    get:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "represented"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Customer selected successfully"
+          schema:
+            $ref: "#/definitions/CustomerResponseModel"
+      security:
+        - enc_user_pool_authorizer_1: []
+        - api_key: []
+      x-amazon-apigateway-integration:
+        credentials: 
+          Fn::ImportValue: iam-APIDatamappingDynamoDBRoleArn
+        uri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":dynamodb:action/Query"
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              application/json: "$input.json('$.Items')"
+        requestParameters:
+          integration.request.header.Content-Type: "'application/x-amz-json-1.0'"
+        requestTemplates:
+          application/json: 
+            Fn::Join:
+            - ''
+            - - '{"TableName":"'
+              - Fn::ImportValue: dynamodb-TableName
+              - >-
+                ", 
+                  "IndexName": "Gsi1Index",
+                  "KeyConditionExpression": "sk = :sk_val",
+                  "FilterExpression": "representative_appointed = :repr_app",
+                  "ExpressionAttributeValues": 
+                  { 
+                    ":sk_val": { "S": "Company" },
+                    ":repr_app": { "S": "$input.params('represented')" }
+                  }
+                }
+        passthroughBehavior: "when_no_templates"
+        contentHandling: "CONVERT_TO_TEXT"
+        httpMethod: "POST"
+        type: "aws"
+  /customers/{place}:
+    get:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "place"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Customer selected successfully"
+          schema:
+            $ref: "#/definitions/CustomerResponseModel"
+      security:
+        - enc_user_pool_authorizer_1: []
+        - api_key: []
+      x-amazon-apigateway-integration:
+        credentials: 
+          Fn::ImportValue: iam-APIDatamappingDynamoDBRoleArn
+        uri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":dynamodb:action/Query"
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              application/json: "$input.json('$.Items')"
+        requestParameters:
+          integration.request.header.Content-Type: "'application/x-amz-json-1.0'"
+        requestTemplates:
+          application/json: 
+            Fn::Join:
+            - ''
+            - - '{"TableName":"'
+              - Fn::ImportValue: dynamodb-TableName
+              - >-
+                ", 
+                  "IndexName": "Gsi2Index",
+                  "KeyConditionExpression": "sk = :sk_val and gsi_2_sk = :place_val", 
+                  "ExpressionAttributeValues": 
+                  { 
+                    ":sk_val": { "S": "Company" },
+                    ":place_val": { "S": "$input.params('place')" }
+                  }
+                }
+        passthroughBehavior: "when_no_templates"
+        contentHandling: "CONVERT_TO_TEXT"
+        httpMethod: "POST"
+        type: "aws"
+  /customer/:
+    put:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "CustomerPutRequest"
+          required: true
+          schema:
+            $ref: "#/definitions/CustomerPutRequest"  
+      responses:
+        "200":
+          description: "Customer inserted successfully"
+          schema:
+            $ref: "#/definitions/CustomerResponseModel"
+      security:
+        - enc_user_pool_authorizer_1: []
+        - api_key: []
+      x-amazon-apigateway-integration:
+        credentials: 
+          Fn::ImportValue: iam-APIDatamappingDynamoDBRoleArn
+        uri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":dynamodb:action/PutItem"
+        responses:
+          default:
+            statusCode: "200"
+        requestTemplates:
+          application/json: 
+            Fn::Join:
+              - ''
+              - - '{"TableName":"'
+                - Fn::ImportValue: dynamodb-TableName
+                - >-
+                  ",
+                    "Item": {
+                        "item_Id": {
+                        "S": "$context.requestId"
+                        },
+                        "item_timestamp": {
+                          "S": "$context.requestTime"
+                        },
+                        "pk_id": {
+                            "S": "$input.path('$.pk_id')"
+                        },
+                        "sk": {
+                            "S": "$input.path('$.sk')"
+                        },
+                        "gsi_1_sk": {
+                            "S": "$input.path('$.gsi_1_sk')"
+                        },
+                        "gsi_2_sk": {
+                            "S": "$input.path('$.gsi_2_sk')"
+                        }
+                        #if ($input.path('$.customer_id') != ""),
+                        "customer_id": {
+                          "S": "$input.path('$.customer_id')"
+                        }
+                        #end
+                        #if ($input.path('$.customer_individual_name') != ""),
+                        "customer_individual_name": {
+                          "S": "$input.path('$.customer_individual_name')"
+                        }
+                        #end
+                        #if ($input.path('$.customer_organization_name') != ""),
+                        "customer_organization_name": {
+                          "S": "$input.path('$.customer_organization_name')"
+                        }
+                        #end
+                        #if ($input.path('$.customer_organization_homepage') != ""),
+                        "customer_organization_homepage": {
+                          "S": "$input.path('$.customer_organization_homepage')"
+                        }
+                        #end
+                        #if ($input.path('$.customer_quality_of_relationship') != ""),
+                        "customer_quality_of_relationship": {
+                          "N": "$input.path('$.customer_quality_of_relationship')"
+                        }
+                        #end
+                        #if ($input.path('$.customer_comment') != ""),
+                        "customer_comment": {
+                          "S": "$input.path('$.customer_comment')"
+                        }
+                        #end
+                        #if ($input.path('$.representative_appointed') != ""),
+                        "representative_appointed": {
+                          "S": "$input.path('$.representative_appointed')"
+                        }
+                        #end
+                    }
+                  }
+        passthroughBehavior: "when_no_templates"
+        contentHandling: "CONVERT_TO_TEXT"
+        httpMethod: "POST"
+        type: "aws"
+  /contract/{contract_id}:
+    get:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "contract_id"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Contract selected successfully"
+          schema:
+            $ref: "#/definitions/ContractResponseModel"
+      security:
+        - enc_user_pool_authorizer_1: []
+        - api_key: []
+      x-amazon-apigateway-integration:
+        credentials: 
+          Fn::ImportValue: iam-APIDatamappingDynamoDBRoleArn
+        uri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":dynamodb:action/Query"
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              application/json: "$input.json('$.Items')"
+        requestParameters:
+          integration.request.header.Content-Type: "'application/x-amz-json-1.0'"
+        requestTemplates:
+          application/json: 
+            Fn::Join:
+            - ''
+            - - '{"TableName":"'
+              - Fn::ImportValue: dynamodb-TableName
+              - >-
+                ", 
+                  "IndexName": "Gsi3Index",
+                  "KeyConditionExpression": "pk_id = :pk_id_val",
+                  "FilterExpression": "not sk = :sk_val",
+                  "ExpressionAttributeValues": 
+                  { 
+                    ":pk_id_val": { "S": "$input.params('contract_id')" }, 
+                    ":sk_val": { "S": "Company" }
+                  }
+                }
+        passthroughBehavior: "when_no_templates"
+        contentHandling: "CONVERT_TO_TEXT"
+        httpMethod: "POST"
+        type: "aws"
+  /contract/:
+    put:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "ContractPutRequest"
+          required: true
+          schema:
+            $ref: "#/definitions/ContractPutRequest"  
+      responses:
+        "200":
+          description: "Contract inserted successfully"
+          schema:
+            $ref: "#/definitions/ContractResponseModel"
+      security:
+        - enc_user_pool_authorizer_1: []
+        - api_key: []
+      x-amazon-apigateway-integration:
+        credentials: 
+          Fn::ImportValue: iam-APIDatamappingDynamoDBRoleArn
+        uri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: AWS::Region
+              - ":dynamodb:action/PutItem"
+        responses:
+          default:
+            statusCode: "200"
+        requestTemplates:
+          application/json: 
+            Fn::Join:
+              - ''
+              - - '{"TableName":"'
+                - Fn::ImportValue: dynamodb-TableName
+                - >-
+                  ",
+                    "Item": {
+                        "item_Id": {
+                        "S": "$context.requestId"
+                        },
+                        "item_timestamp": {
+                          "S": "$context.requestTime"
+                        },
+                        "pk_id": {
+                            "S": "$input.path('$.pk_id')"
+                        },
+                        "sk": {
+                            "S": "$input.path('$.sk')"
+                        },
+                        "gsi_1_sk": {
+                            "S": "$input.path('$.gsi_1_sk')"
+                        },
+                        "gsi_2_sk": {
+                            "S": "$input.path('$.gsi_2_sk')"
+                        },
+                        "product_category_type": {
+                            "S": "$input.path('$.product_category_type')"
+                        },
+                        "contract_terminated": {
+                            "S": "$input.path('$.contract_terminated')"
+                        },
+                        "contract_partner_type": {
+                            "S": "$input.path('$.contract_partner_type')"
+                        }
+                        #if ($input.path('$.customer_contract_comment') != ""),
+                        "customer_contract_comment": {
+                          "S": "$input.path('$.customer_contract_comment')"
+                        }
+                        #end
+                    }
+                  }
+        passthroughBehavior: "when_no_templates"
+        contentHandling: "CONVERT_TO_TEXT"
+        httpMethod: "POST"
+        type: "aws"
+definitions:
+  Empty:
+    type: "object"
+    title: "Empty Schema"
+  CustomerPutRequest:
+    type: "object"
+    properties:
+      pk_id: 
+        type: string
+      sk: 
+        type: string
+      gsi_1_sk: 
+        type: string
+      gsi_2_sk: 
+        type: string
+    title: "CustomerInputModel"
+  CustomerResponseModel:
+    type: "object"
+    properties:
+      pk_id: 
+        type: string
+      gsi_1_sk: 
+        type: string
+      gsi_2_sk: 
+        type: string
+      sk: 
+        type: string
+      item_id:
+        type: string
+      item_timestamp:
+        type: string
+    title: "CustomerOutputModel"
+  ContractPutRequest:
+    type: "object"
+    properties:
+      pk_id: 
+        type: string
+      sk: 
+        type: string
+      gsi_1_sk: 
+        type: string
+      gsi_2_sk: 
+        type: string
+    title: "ContractInputModel"
+  ContractResponseModel:
+    type: "object"
+    properties:
+      pk_id: 
+        type: string
+      gsi_1_sk: 
+        type: string
+      gsi_2_sk: 
+        type: string
+      sk: 
+        type: string
+      item_id:
+        type: string
+      item_timestamp:
+        type: string
+    title: "ContractOutputModel"

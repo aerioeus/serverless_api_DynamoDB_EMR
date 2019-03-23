@@ -13,7 +13,7 @@
     },
     {
         "ParameterKey": "CallbackUrls",
-        "ParameterValue": "https://www.example.com,https://www.example1.com"
+        "ParameterValue": "https://www.example.com"
     },
     {
         "ParameterKey": "NodeJsZipKey",

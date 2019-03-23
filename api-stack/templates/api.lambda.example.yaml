@@ -1,0 +1,284 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  This template creates an API that uses a lambda function and a dynamo table
+
+Parameters:
+  Project:
+    Description: Enter Project Name.
+    Type: String
+    Default: invoicegenerator
+
+  Subproject:
+    Description: Enter Project Name.
+    Type: String
+    Default: ebs
+
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+    Default: Dev
+    AllowedValues:
+      - Dev
+      - Prod
+    ConstraintDescription: Specify either Dev or Prod
+
+  ApiKeySourceType:
+    Description: Setup for the ApiKeySourceType
+    Type: String
+    Default: HEADER
+
+  minimumCompressionSize:
+    Description: >
+      integer that is used to enable compression (with non-negative between 0
+      and 10485760 (10M) bytes, inclusive) or disable compression (with a null value) on an API
+    Type: String
+    Default: 1048576
+
+  EndpointConfiguration:
+    Description: A list of the endpoint types of the domain name
+    Type: String
+    Default: EDGE
+    AllowedValues:
+      - EDGE
+      - REGIONAL
+    ConstraintDescription: Specify either EDGE or REGIONAL
+
+  RestApiName:
+    Description: Name for the API Gateway RestApi
+    Type: String
+    Default: enc_contract
+
+  BasePath:
+    Description: >
+      custom domain name for your API in Amazon API Gateway
+      Uppercase letters are not supported
+    Type: String
+    Default: contract_api
+
+  IdentitySource:
+    Description: The source of the identity in an incoming request
+    Type: String
+    Default: Authorization
+
+  ThrottlingBurst:
+    Description: number of burst requests per second that API Gateway permits across all APIs, stages, and methods in an AWS account
+    Type: Number
+    Default: 200
+
+  ThrottlingRate:
+    Description: number of steady-state requests per second that API Gateway permits across all APIs, stages, and methods in an AWS account
+    Type: Number
+    Default: 500
+
+  Stagename:
+    Description: name of the stage, which API Gateway uses as the first path segment in the invoked Uniform Resource Identifier (URI)
+    Type: String
+    Default: contract_v1 
+
+  # This parameter is needed because we can not use Fn::ImportValue: s3-TemplateBucketName in the Fn::Transform function
+  S3BucketName:
+    Description: name of S3 bucket with swagger scripts
+    Type: String
+
+
+  # # this parameter is being provided via masterstack
+  # APIDomain:
+  #   Description: DomainName for the API
+  #   Type: String
+
+  # this parameter is being provided via masterstack
+  # EncUserPoolArn:
+  #     Description: Arn of user pool to use
+  #     Type: String
+
+  # this parameter is being provided via masterstack
+  # APIClientCertificateName:
+  #   Description: client certificate that Amazon API Gateway (API Gateway) uses to configure 
+  #     client-side SSL authentication for sending requests to the integration endpoint
+  #   Type: String 
+
+Resources:
+  Api6:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Description: Api for Lambda Resource for EBS
+      Name: !Ref RestApiName
+      ApiKeySourceType: !Ref ApiKeySourceType
+      Body:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: 
+              Fn::Sub:
+                - s3://${S3BucketName}/yaml/swaggerapis/contract-swagger-apigateway.yaml 
+                - S3BucketName: !Ref S3BucketName         
+      EndpointConfiguration:
+        Types:
+            - !Ref EndpointConfiguration
+      FailOnWarnings: true
+      MinimumCompressionSize: !Ref minimumCompressionSize
+
+  # # lambda1 API
+  # SubdomainMapping6:
+  #   Type: AWS::ApiGateway::BasePathMapping
+  #   Properties:
+  #     BasePath: !Ref BasePath
+  #     DomainName: !Ref APIDomain
+  #     RestApiId: !Ref Api6
+  #     Stage: !Ref ApiStage6
+
+  ApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: !Sub ${EnvironmentName}-ApiLogGroupARN
+      RetentionInDays: 30
+
+  # a "stage" represents a unique identifier for a particular version of a deployed RestApi like "dev", "test", "prod" etc
+  # if the stage is assigned the deployment then that is callable by users
+  ApiStage6:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      Description: !Sub ${EnvironmentName}-Stage
+      StageName: !Ref Stagename
+      RestApiId: !Ref Api6
+      DeploymentId: !Ref ApiDeployment6
+      #ClientCertificateId: !Ref APIClientCertificateName
+      AccessLogSetting:
+        DestinationArn: !GetAtt
+            - ApiLogGroup
+            - Arn
+        Format: $context.error.message
+          $context.error.messageString
+          $context.identity.user
+          $context.requestId
+          $context.requestTime
+          $context.resourceId
+          $context.stage
+          $context.responseLatency
+          $context.identity.userArn
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          MetricsEnabled: true
+          DataTraceEnabled: true
+          LoggingLevel: INFO
+      TracingEnabled: true
+
+  # deploys the Api API to a stage specified in the stage resource
+  ApiDeployment6:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      Description: Deployment API
+      RestApiId: !Ref Api6
+
+  # creates a unique key that you can distribute to clients
+  ApiKey6:
+    Type: AWS::ApiGateway::ApiKey
+    DependsOn:
+      - ApiStage6
+    Properties:
+      Name: ApiKey6
+      Description: CloudFormation API Key V1
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref Api6
+          StageName: !Ref ApiStage6
+
+  # creates a usage plan to enforce throttling and quota
+  UsagePlan6:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      Description: Customer usage plan
+      ApiStages:
+        - ApiId: !Ref Api6
+          Stage: !Ref ApiStage6
+      Quota:
+        Limit: 5000
+        Period: MONTH
+      Throttle:
+        BurstLimit: !Ref ThrottlingBurst
+        RateLimit: !Ref ThrottlingRate
+      UsagePlanName: Invoiceapp-usageplan
+
+  usagePlanKey6:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref ApiKey6
+      KeyType: API_KEY
+      UsagePlanId: !Ref UsagePlan6
+
+  APIGetContractByNumberInvokePermission: 
+    Type: "AWS::Lambda::Permission"
+    Properties: 
+      FunctionName: !ImportValue lambda-GetContractByNumberArn
+      Action: "lambda:InvokeFunction"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub 
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*/*
+          - Api: !Ref Api6
+  
+  APIUpdateContractInvokePermission: 
+    Type: "AWS::Lambda::Permission"
+    Properties: 
+      FunctionName: !ImportValue lambda-UpdateContractArn
+      Action: "lambda:InvokeFunction"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub 
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*/*
+          - Api: !Ref Api6
+
+  APIDeleteContractInvokePermission: 
+    Type: "AWS::Lambda::Permission"
+    Properties: 
+      FunctionName: !ImportValue lambda-DeleteContractArn
+      Action: "lambda:InvokeFunction"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub 
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*/*
+          - Api: !Ref Api6
+
+Outputs:
+  StackName:
+    Description: The Name of the Stack
+    Value: !Ref AWS::StackName
+
+  Project:
+    Description: The project name
+    Value: !Ref Project
+
+  RestApiId:
+    Description: returns the RestApi ID
+    Value: !Ref Api6
+
+  RootResourceId:
+    Description: returns the root resource ID for a RestApi resource
+    Value: !GetAtt Api6.RootResourceId
+
+  RootUrl:
+    Description: Root URL of the API gateway
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: Api6
+          - ".execute-api."
+          - Ref: AWS::Region
+          - ".amazonaws.com"
+
+  ApiDomain:
+    Description: Domain of the API gateway
+    Value:
+      Fn::Join:
+        - ""
+        - - Ref: Api6
+          - ".execute-api."
+          - Ref: AWS::Region
+          - ".amazonaws.com"
+
+  ApiKeyId:
+    Description: returns the API key ID
+    Value: !Ref ApiKey6
+
+  ApiStageName:
+    Description: returns the name of the stage
+    Value: !Ref ApiStage6

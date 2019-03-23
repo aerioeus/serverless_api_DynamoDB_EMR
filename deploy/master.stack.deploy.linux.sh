@@ -113,12 +113,12 @@ node -e 'require(\"./nodejs/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 2
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
-echo "Create lambda-stack. It creates the Lambda functions " 
-aws cloudformation create-stack --stack-name lambda-stack --template-body file://lambda-stack/templates/lambda.yaml --output text --capabilities CAPABILITY_IAM --parameters ParameterKey=NodeJsZipKey,ParameterValue=$ZipPathTimeStamp/nodejs.zip
+# echo "Create lambda-stack. It creates the Lambda functions " 
+# aws cloudformation create-stack --stack-name lambda-stack --template-body file://lambda-stack/templates/lambda.yaml --output text --capabilities CAPABILITY_IAM --parameters ParameterKey=NodeJsZipKey,ParameterValue=$ZipPathTimeStamp/nodejs.zip
 
-echo "Create lambda-stack. WAITING ..." 
-aws cloudformation wait stack-create-complete --stack-name lambda-stack
-echo "Create lambda-stack. DONE" 
+# echo "Create lambda-stack. WAITING ..." 
+# aws cloudformation wait stack-create-complete --stack-name lambda-stack
+# echo "Create lambda-stack. DONE" 
 
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -149,7 +149,7 @@ echo AppClientId=$AppClientId
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 echo "Create api-stack. It creates ApiGateway infrastructure"
-aws cloudformation create-stack --stack-name api-stack --template-body file://api-stack/templates/api.yaml --output text --capabilities CAPABILITY_IAM  CAPABILITY_AUTO_EXPAND --parameters ParameterKey=S3BucketName,ParameterValue=$S3BucketName
+aws cloudformation create-stack --stack-name api-stack --template-body file://api-stack/templates/api.customer.yaml --output text --capabilities CAPABILITY_IAM  CAPABILITY_AUTO_EXPAND --parameters ParameterKey=S3BucketName,ParameterValue=$S3BucketName
 
 echo "Create api-stack. WAITING ..." 
 aws cloudformation wait stack-create-complete --stack-name api-stack

@@ -46,14 +46,14 @@ Parameters:
   RestApiName:
     Description: Name for the API Gateway RestApi
     Type: String
-    Default: enc_contract
+    Default: energycos
 
   BasePath:
     Description: >
       custom domain name for your API in Amazon API Gateway
       Uppercase letters are not supported
     Type: String
-    Default: contract_api
+    Default: api
 
   IdentitySource:
     Description: The source of the identity in an incoming request
@@ -73,13 +73,12 @@ Parameters:
   Stagename:
     Description: name of the stage, which API Gateway uses as the first path segment in the invoked Uniform Resource Identifier (URI)
     Type: String
-    Default: contract_v1 
+    Default: v1 
 
   # This parameter is needed because we can not use Fn::ImportValue: s3-TemplateBucketName in the Fn::Transform function
   S3BucketName:
     Description: name of S3 bucket with swagger scripts
     Type: String
-
 
   # # this parameter is being provided via masterstack
   # APIDomain:
@@ -110,8 +109,8 @@ Resources:
           Parameters:
             Location: 
               Fn::Sub:
-                - s3://${S3BucketName}/yaml/swaggerapis/contract-swagger-apigateway.yaml 
-                - S3BucketName: !Ref S3BucketName         
+                - s3://${S3BucketName}/yaml/swaggerapis/api.customer.swagger.yaml 
+                - S3BucketName: !Ref S3BucketName    
       EndpointConfiguration:
         Types:
             - !Ref EndpointConfiguration
@@ -206,36 +205,6 @@ Resources:
       KeyId: !Ref ApiKey6
       KeyType: API_KEY
       UsagePlanId: !Ref UsagePlan6
-
-  APIGetContractByNumberInvokePermission: 
-    Type: "AWS::Lambda::Permission"
-    Properties: 
-      FunctionName: !ImportValue lambda-GetContractByNumberArn
-      Action: "lambda:InvokeFunction"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub 
-          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*/*
-          - Api: !Ref Api6
-  
-  APIUpdateContractInvokePermission: 
-    Type: "AWS::Lambda::Permission"
-    Properties: 
-      FunctionName: !ImportValue lambda-UpdateContractArn
-      Action: "lambda:InvokeFunction"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub 
-          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*/*
-          - Api: !Ref Api6
-
-  APIDeleteContractInvokePermission: 
-    Type: "AWS::Lambda::Permission"
-    Properties: 
-      FunctionName: !ImportValue lambda-DeleteContractArn
-      Action: "lambda:InvokeFunction"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub 
-          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*/*
-          - Api: !Ref Api6
 
 Outputs:
   StackName:
