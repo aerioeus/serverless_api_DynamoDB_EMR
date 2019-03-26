@@ -1,9 +1,8 @@
 import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom} from "./factory.utils";
 import { Pod, PodDistributionNetwork } from "../models";
 import { fakeValueArrays } from "./fake-value.arrays";
-import { MultiChildParentInternal } from "../models/internal/multi-child-parent-item.internal.interface";
 
-export function getNewPodDistributionNetworkItems(index: any, pod: Pod, childCount: number): MultiChildParentInternal<PodDistributionNetwork, Pod> {
+export function getNewPodDistributionNetworkItems(index: any, pod: Pod, childCount: number): PodDistributionNetwork[] {
     const dbItems = [];
 
     for (let i = index; i < index + childCount; i++){
@@ -34,11 +33,6 @@ export function getNewPodDistributionNetworkItems(index: any, pod: Pod, childCou
 
         dbItems.push(dbItem);
     }
-
-    const item = {
-        db_items: dbItems,
-        parent_db_item: pod
-    };
-
-    return item;
+    
+    return dbItems;
 }

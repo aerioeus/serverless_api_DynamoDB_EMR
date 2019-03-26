@@ -19,7 +19,6 @@ import { getNewSupplierItem } from "./fake-factories/supplier.factory";
 import { getNewBuildingEntranceItems } from "./fake-factories/building-entrance.factory";
 import { ChildParentInternal } from "./models/internal/child-parent-item.internal.interface";
 import { getNewBuildingItem } from "./fake-factories/building.factory";
-import { MultiChildParentInternal } from "./models/internal/multi-child-parent-item.internal.interface";
 import { getNewPodItem } from "./fake-factories/pod.factory";
 import { getNewPodInspectionItems } from "./fake-factories/pod-inspection.factory";
 import { getNewPodMaintenanceItems } from "./fake-factories/pod-maintenance.factory";
@@ -110,24 +109,24 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     addArrayToDb(buildings, dynamoDbTableName, insertItem, insertDelay);
 
     //create entrances
-    const entrances = getBuildingEntrances(entranceIdSeedStart, entranceCounts, entrancePerBuilding, buildings);
-    addArrayToDb(entrances, dynamoDbTableName, insertMultiChildParentItem, insertDelay);
+    const entrances = getBuildingEntrances(entranceIdSeedStart, entrancePerBuilding, buildings);
+    addArrayToDb(entrances, dynamoDbTableName, insertItem, insertDelay);
 
     // create pods
     const pods = createItems(podIdSeedStart, podsCount, getNewPodItem);
     addArrayToDb(pods, dynamoDbTableName, insertItem, insertDelay);
 
     //create inspections
-    const inspections = getPodInspections(podChildIdSeedStart, podChildrenCount, childPerPod, pods);
-    addArrayToDb(inspections, dynamoDbTableName, insertMultiChildParentItem, insertDelay);
+    const inspections = getPodInspections(podChildIdSeedStart, childPerPod, pods);
+    addArrayToDb(inspections, dynamoDbTableName, insertItem, insertDelay);
 
     //create maintenances
-    const maintenances = getPodMaintenances(podChildIdSeedStart, podChildrenCount, childPerPod, pods);
-    addArrayToDb(maintenances, dynamoDbTableName, insertMultiChildParentItem, insertDelay);
+    const maintenances = getPodMaintenances(podChildIdSeedStart, childPerPod, pods);
+    addArrayToDb(maintenances, dynamoDbTableName, insertItem, insertDelay);
 
     //create distribution networks
-    const dns = getPodDistributionNetworks(podChildIdSeedStart, podChildrenCount, childPerPod, pods);
-    addArrayToDb(dns, dynamoDbTableName, insertMultiChildParentItem, insertDelay);
+    const dns = getPodDistributionNetworks(podChildIdSeedStart, childPerPod, pods);
+    addArrayToDb(dns, dynamoDbTableName, insertItem, insertDelay);
 }
 
 /**
@@ -147,10 +146,6 @@ function insertItem <T extends ItemBase> (item: T, dynamoDbTableName: string) {
 function insertChildParentItem <T1 extends ItemBase, T2 extends ItemBase>(item: ChildParentInternal<T1, T2>, dynamoDbTableName: string)  {
     addItemToDb(item.db_item, dynamoDbTableName, dynamoDoc);
     addItemToDb(item.parent_db_item, dynamoDbTableName, dynamoDoc);
-}
-
-function insertMultiChildParentItem <T1 extends ItemBase, T2 extends ItemBase>(item: MultiChildParentInternal<T1, T2>, dynamoDbTableName: string)  {
-    item.db_items.forEach(i => addItemToDb(i, dynamoDbTableName, dynamoDoc));
 }
 
 /**
@@ -188,20 +183,20 @@ function getSupplierContracts(idSeedStart : number, elemCount: number, suppliers
     return getChildRecordsInternal(idSeedStart, elemCount, suppliers, getNewSupplierContractItem);
 }
 
-function getBuildingEntrances(idSeedStart : number, elemCount: number, childPerParent: number, buildings: Building[]) {
-    return getChildMultiRecordsInternal(idSeedStart, elemCount, childPerParent, buildings, getNewBuildingEntranceItems);
+function getBuildingEntrances(idSeedStart : number, childPerParent: number, buildings: Building[]) {
+    return getChildMultiRecordsInternal(idSeedStart, childPerParent, buildings, getNewBuildingEntranceItems);
 }
 
-function getPodInspections(idSeedStart : number, elemCount: number, childPerParent: number, pods: Pod[]) {
-    return getChildMultiRecordsInternal(idSeedStart, elemCount, childPerParent, pods, getNewPodInspectionItems);
+function getPodInspections(idSeedStart : number, childPerParent: number, pods: Pod[]) {
+    return getChildMultiRecordsInternal(idSeedStart, childPerParent, pods, getNewPodInspectionItems);
 }
 
-function getPodMaintenances(idSeedStart : number, elemCount: number, childPerParent: number, pods: Pod[]) {
-    return getChildMultiRecordsInternal(idSeedStart, elemCount, childPerParent, pods, getNewPodMaintenanceItems);
+function getPodMaintenances(idSeedStart : number,childPerParent: number, pods: Pod[]) {
+    return getChildMultiRecordsInternal(idSeedStart, childPerParent, pods, getNewPodMaintenanceItems);
 }
 
-function getPodDistributionNetworks(idSeedStart : number, elemCount: number, childPerParent: number, pods: Pod[]) {
-    return getChildMultiRecordsInternal(idSeedStart, elemCount, childPerParent, pods, getNewPodDistributionNetworkItems);
+function getPodDistributionNetworks(idSeedStart : number, childPerParent: number, pods: Pod[]) {
+    return getChildMultiRecordsInternal(idSeedStart,childPerParent, pods, getNewPodDistributionNetworkItems);
 }
 
 function getPafContractLists<TContract extends ItemBase>(pafs: PriceAdjustmentFormula[], contracts: TContract[], contractsPerPaf: number) {
@@ -239,10 +234,8 @@ function getChildRecordsInternal<T1, T2>(
 
 function getChildMultiRecordsInternal<T1, T2>(
     idSeedStart : number, 
-    elemCount: number, 
     childPerParent: number,
-    parents: T1[], createChildrenInternalFunc: (index: number, parent: T1, childPerParent: number) => T2): T2[] {
-    
+    parents: T1[], createChildrenInternalFunc: (index: number, parent: T1, childPerParent: number) => T2[]): T2[] {
         if(parents.length == 0){
             return [];
         }
@@ -250,10 +243,8 @@ function getChildMultiRecordsInternal<T1, T2>(
         const childRecords = new Array<T2>();
 
         parents.forEach(p=> {
-            for (let i = idSeedStart; i < idSeedStart + elemCount; i++){
-                const child = createChildrenInternalFunc(i++, p, childPerParent);
-                childRecords.push(child);
-            }
+            const children = createChildrenInternalFunc(idSeedStart, p, childPerParent);
+            children.forEach(c=>childRecords.push(c));
         });
 
     return childRecords;

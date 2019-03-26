@@ -1,9 +1,8 @@
 import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom } from "./factory.utils";
 import { Building, BuildingEntrance } from "../models";
 import { fakeValueArrays } from "./fake-value.arrays";
-import { MultiChildParentInternal } from "../models/internal/multi-child-parent-item.internal.interface";
 
-export function getNewBuildingEntranceItems(index: any, building: Building, childCount: number): MultiChildParentInternal<BuildingEntrance, Building> {
+export function getNewBuildingEntranceItems(index: any, building: Building, childCount: number): BuildingEntrance[] {
     const dbItems = [];
 
     for (let i = index; i < index + childCount; i++){
@@ -30,10 +29,5 @@ export function getNewBuildingEntranceItems(index: any, building: Building, chil
         dbItems.push(dbItem);
     }
 
-    const item = {
-        db_items: dbItems,
-        parent_db_item: building
-    };
-
-    return item;
+    return dbItems;
 }

@@ -1,9 +1,8 @@
 import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate } from "./factory.utils";
 import { Pod, PodMaintenance } from "../models";
 import { fakeValueArrays } from "./fake-value.arrays";
-import { MultiChildParentInternal } from "../models/internal/multi-child-parent-item.internal.interface";
 
-export function getNewPodMaintenanceItems(index: any, pod: Pod, childCount: number): MultiChildParentInternal<PodMaintenance, Pod> {
+export function getNewPodMaintenanceItems(index: any, pod: Pod, childCount: number): PodMaintenance[] {
     const dbItems = [];
 
     for (let i = index; i < index + childCount; i++) {
@@ -42,10 +41,5 @@ export function getNewPodMaintenanceItems(index: any, pod: Pod, childCount: numb
         dbItems.push(dbItem);
     }
 
-    const item = {
-        db_items: dbItems,
-        parent_db_item: pod
-    };
-
-    return item;
+    return dbItems;
 }
