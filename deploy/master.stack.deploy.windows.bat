@@ -78,28 +78,28 @@ call npm i
 @echo "Build the .ts files into .js files" 
 call tsc
 
-@echo "Delete .zip archive if it exists" 
-del nodejs.zip
+REM @echo "Delete .zip archive if it exists" 
+REM del nodejs.zip
 
-@echo "Create the zip archive of nodejs folder(requires powershell)" 
-7z a -tzip  nodejs.zip .\*
+REM @echo "Create the zip archive of nodejs folder(requires powershell)" 
+REM 7z a -tzip  nodejs.zip .\*
 
-@echo off
+REM @echo off
 
-@echo Retreive timestamp
+REM @echo Retreive timestamp
 
-for /f "delims=" %%a in ('wmic OS Get localdatetime ^| find "."') do set DateTime=%%a
+REM for /f "delims=" %%a in ('wmic OS Get localdatetime ^| find "."') do set DateTime=%%a
 
-set ZipPathTimeStamp=node/%DateTime:~0,14%
+REM set ZipPathTimeStamp=node/%DateTime:~0,14%
 
-@echo PathWithTimeStamp=%ZipPathTimeStamp%
+REM @echo PathWithTimeStamp=%ZipPathTimeStamp%
 
-@echo "Deploy the node zip to s3 bucket. Use timestamp to mark the latest code archive"
+REM @echo "Deploy the node zip to s3 bucket. Use timestamp to mark the latest code archive"
  
-call aws s3 sync . s3://%S3BucketName%/%ZipPathTimeStamp%  --exclude "*" --include "*.zip"
+REM call aws s3 sync . s3://%S3BucketName%/%ZipPathTimeStamp%  --exclude "*" --include "*.zip"
 
-@echo "Delete .zip archive"
-del nodejs.zip
+REM @echo "Delete .zip archive"
+REM del nodejs.zip
 
 @echo "Return to the root folder"
 cd ..
@@ -118,7 +118,7 @@ call aws cloudformation wait stack-create-complete --stack-name dynamodb-stack
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
 @echo "Fill table with fake data"
-call node -e 'require(\"./nodejs/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 20)'
+call node -e 'require(\"./nodejs/dist/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 20)'
 
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------

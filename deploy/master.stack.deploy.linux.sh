@@ -71,26 +71,26 @@ npm i
 echo "Build the .ts files into .js files" 
 tsc
 
-echo "Delete .zip archive if it exists" 
-rm nodejs.zip
+# echo "Delete .zip archive if it exists" 
+# rm nodejs.zip
 
-echo "Create the zip archive of nodejs folder(requires programm zip)" 
-zip -qr nodejs.zip .
+# echo "Create the zip archive of nodejs folder(requires programm zip)" 
+# zip -qr nodejs.zip .
 
-echo Retreive timestamp
+# echo Retreive timestamp
 
-DateTimeStamp=$(date +%F_%H-%M-%S)
+# DateTimeStamp=$(date +%F_%H-%M-%S)
 
-ZipPathTimeStamp=node/$DateTimeStamp
+# ZipPathTimeStamp=node/$DateTimeStamp
 
-echo ZipPathTimeStamp=$ZipPathTimeStamp
+# echo ZipPathTimeStamp=$ZipPathTimeStamp
 
-echo "Deploy the node zip to s3 bucket. Use timestamp to mark the latest code archive"
+# echo "Deploy the node zip to s3 bucket. Use timestamp to mark the latest code archive"
  
-aws s3 sync . s3://$S3BucketName/$ZipPathTimeStamp  --exclude "*" --include "*.zip"
+# aws s3 sync . s3://$S3BucketName/$ZipPathTimeStamp  --exclude "*" --include "*.zip"
 
-echo "Delete .zip archive"
-rm nodejs.zip
+# echo "Delete .zip archive"
+# rm nodejs.zip
 
 echo "Return to the root folder"
 cd ..
@@ -109,7 +109,7 @@ echo "Create dynamodb-stack. DONE"
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
 echo "Fill table with fake data"
-node -e 'require(\"./nodejs/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 20)'
+node -e 'require(\"./nodejs/dist/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 20)'
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 

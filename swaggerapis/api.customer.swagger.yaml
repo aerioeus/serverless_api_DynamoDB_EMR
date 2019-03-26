@@ -134,7 +134,7 @@ paths:
                 ", 
                   "IndexName": "Gsi1Index",
                   "KeyConditionExpression": "sk = :sk_val",
-                  "FilterExpression": "representative_appointed = :repr_app",
+                  "FilterExpression": "customer_representative_appointed = :repr_app",
                   "ExpressionAttributeValues": 
                   { 
                     ":sk_val": { "S": "Company" },
@@ -289,9 +289,9 @@ paths:
                           "S": "$input.path('$.customer_comment')"
                         }
                         #end
-                        #if ($input.path('$.representative_appointed') != ""),
-                        "representative_appointed": {
-                          "S": "$input.path('$.representative_appointed')"
+                        #if ($input.path('$.customer_representative_appointed') != ""),
+                        "customer_representative_appointed": {
+                          "S": "$input.path('$.customer_representative_appointed')"
                         }
                         #end
                     }
@@ -415,18 +415,15 @@ paths:
                         "gsi_2_sk": {
                             "S": "$input.path('$.gsi_2_sk')"
                         },
-                        "product_category_type": {
-                            "S": "$input.path('$.product_category_type')"
+                        "contract_product_category_type": {
+                            "S": "$input.path('$.contract_product_category_type')"
                         },
                         "contract_terminated": {
                             "S": "$input.path('$.contract_terminated')"
                         },
-                        "contract_partner_type": {
-                            "S": "$input.path('$.contract_partner_type')"
-                        }
-                        #if ($input.path('$.customer_contract_comment') != ""),
-                        "customer_contract_comment": {
-                          "S": "$input.path('$.customer_contract_comment')"
+                        #if ($input.path('$.contract_comment') != ""),
+                        "contract_comment": {
+                          "S": "$input.path('$.contract_comment')"
                         }
                         #end
                     }

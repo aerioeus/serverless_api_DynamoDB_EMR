@@ -65,6 +65,7 @@ nodejs/*.js
 nodejs/*/*.js
 nodejs/*/*/*.js
 nodejs/nodejs.zip
+nodejs/dist
 
 api-created.result.txt
 
