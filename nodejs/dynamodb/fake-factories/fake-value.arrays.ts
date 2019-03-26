@@ -20,7 +20,10 @@ export const fakeValueArrays = {
     supplier_lastNames : ["Innuendo", "Mercury", "Taylor", "May", "Kruger", "Deacon", "Meladze"],
     industry_sectors: ["Oil & Gas", "Electricity", "Water"],
     supplier_comments : ["super supplier", "ok", "forgets to deliver in time", "bad communication", "mediocre relationship"],
-    building_categories: ["apartment building", "industry building", "school", "univercity", "mall"]
+    building_categories: ["apartment building", "industry building", "school", "univercity", "mall"],
+    inspection_maintenance_companies: ["Insp./Maint. company #1","Insp./Maint. company #2","Insp./Maint. company #3","Insp./Maint. company #4"],
+    hydraulic_circuite_types: ["Drosselschaltung", "Umlenkschaltung", "Beimischschaltung (Mischventil)", "Beimischschaltung (Verteilerventil)", "Beimischschaltung (differenzdrucklosem Verteiler)"],
+    distribution_classifications: ["Wärmenetz", "Stromnetz", "Gasnetz"],
+    distribution_network_types: ["Erzeugerkreislauf", "Verteilerkreislauf", "Verbraucherkreislauf (immer Heizwärme)", "Zirkulationskreislauf"],
+    materials: ["copper", "aluminium", "plastic"]
 }
-
-
