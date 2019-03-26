@@ -1,14 +1,16 @@
-import { PriceAdjustmentFormula, CustomerContract, ContractPriceAdjustmentFormula } from "../models";
+import { PriceAdjustmentFormula, CustomerContract, ContractPriceAdjustmentFormula, SupplierContract } from "../models";
 import { getNewGuid, getCurrentDateTimeLikeAws } from ".";
 
 export function getContractPafItem (
     pafItem: PriceAdjustmentFormula, 
-    contractItem: CustomerContract,
+    contractItem: CustomerContract | SupplierContract,
     isSupplier: boolean): ContractPriceAdjustmentFormula {
+
+    const id = isSupplier ? (<SupplierContract>contractItem).supply_contract_id : (<CustomerContract>contractItem).customer_contract_id;
     let item = {
         item_id: getNewGuid(),
         item_timestamp: getCurrentDateTimeLikeAws(),
-        pk_id: contractItem.customer_contract_id,
+        pk_id: id,
         sk: pafItem.paf_id,
         gsi_1_sk: pafItem.paf_name,
         gsi_2_sk: pafItem.paf_description,

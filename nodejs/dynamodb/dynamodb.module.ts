@@ -11,13 +11,15 @@ import {
     getNewPafItem,
     fewTimesOneOf,
     getContractPafItem } from "./fake-factories";
-import { PriceAdjustmentFormula, CustomerContract, Customer } from "./models";
-import { CustomerContractInternal } from "./models/internal/customer-contract.internal.interface";
+import { PriceAdjustmentFormula, CustomerContract, Customer, Building } from "./models";
 import { ItemBase } from "./models/base";
 import { Supplier } from "./models/supplier.interface";
 import { getNewSupplierContractItem } from "./fake-factories/supplier-contract.factory";
-import { SupplierContractInternal } from "./models/internal/supplier-contract.internal.interface";
 import { getNewSupplierItem } from "./fake-factories/supplier.factory";
+import { getNewBuildingEntranceItems } from "./fake-factories/building-entrance.factory";
+import { ChildParentInternal } from "./models/internal/child-parent-item.internal.interface";
+import { getNewBuildingItem } from "./fake-factories/building.factory";
+import { MultiChildParentInternal } from "./models/internal/multi-child-parent-item.internal.interface";
 
 export const dynamoDoc = new DynamoDB.DocumentClient({
     region: awsConfig.region,
@@ -34,6 +36,9 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     
     // there will be 3 times less pafs than contracts
     const contractsPerPaf = 3;
+
+    // there will be 3 times less buildings than entrances
+    const entrancePerBuilding = 3;
     
     const customerIdSeedStart = idSeedStart * getRandom(idSeedStart);
     const customerCount = +(elemCount / contractsPerCustomer).toFixed();
@@ -41,19 +46,25 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     const pafIdSeedStart = idSeedStart * getRandom(idSeedStart);
     const pafsCount = +(2 * elemCount / contractsPerPaf).toFixed();
 
+    const entranceIdSeedStart = idSeedStart * getRandom(idSeedStart);
+    const entranceCounts = elemCount;
+
+    const buildingIdSeedStart = idSeedStart * getRandom(idSeedStart);
+    const buildingsCount = +(entranceCounts / entrancePerBuilding).toFixed();
+
+    // create pafs (common for customers and suppliers)
+    const pafs = createItems(pafIdSeedStart, pafsCount, getNewPafItem);
+    addArrayToDb(pafs, dynamoDbTableName, insertItem, insertDelay);
+
     // create customers
     const customers = createItems(customerIdSeedStart, customerCount, getNewCustomerItem);
 
     // create customer contracts
-    const customerContracts = getCustomersAndContracts(idSeedStart, elemCount, customers);
-    addArrayToDb(customerContracts, dynamoDbTableName, insertCutomerContract, insertDelay);
-
-    // create customer pafs
-    const pafs = createItems(pafIdSeedStart, pafsCount, getNewPafItem);
-    addArrayToDb(pafs, dynamoDbTableName, insertItem, insertDelay);
+    const customerContracts = getCustomerContracts(idSeedStart, elemCount, customers);
+    addArrayToDb(customerContracts, dynamoDbTableName, insertChildParentItem, insertDelay);
 
     // create adjucency list to implement many-to-many between pafs and contracts
-    const pafContractRelationsCustomers = getPafContractLists(pafs, customerContracts, contractsPerPaf);
+    const pafContractRelationsCustomers = getPafContractLists(pafs, customerContracts.map(i=>i.db_item), contractsPerPaf);
 
     // create pafContracts for customers
     const contractPafsCustomers = pafContractRelationsCustomers.map(i=> getContractPafItem(i.paf, i.contract, false));
@@ -67,19 +78,26 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     const suppliers = createItems(customerIdSeedStart, customerCount, getNewSupplierItem);
 
     // create supplier contracts
-    const supplierContracts = getSuppliersAndContracts(idSeedStart, elemCount, suppliers);
-    addArrayToDb(supplierContracts, dynamoDbTableName, insertSupplierContract, insertDelay);
+    const supplierContracts = getSupplierContracts(idSeedStart, elemCount, suppliers);
+    addArrayToDb(supplierContracts, dynamoDbTableName, insertChildParentItem, insertDelay);
 
     // create adjucency list to implement many-to-many between pafs and contracts
-    const pafContractRelationsSuppliers = getPafContractLists(pafs, customerContracts, contractsPerPaf);
+    const pafContractRelationsSuppliers = getPafContractLists(pafs, supplierContracts.map(i=>i.db_item), contractsPerPaf);
 
-    // create pafContracts for customers
+    // create pafContracts for suppliers
     const contractPafsSuppliers = pafContractRelationsSuppliers.map(i=> getContractPafItem(i.paf, i.contract, true));
     addArrayToDb(contractPafsSuppliers, dynamoDbTableName, insertItem, insertDelay);
 
-    // create contractPafs for customers
+    // create contractPafs for suppliers
     const pafContractsSuppliers = pafContractRelationsSuppliers.map(i=>getPafContractItem(i.contract, i.paf, true));
     addArrayToDb(pafContractsSuppliers, dynamoDbTableName, insertItem, insertDelay);
+
+    // create buildings
+    const buildings = createItems(buildingIdSeedStart, buildingsCount, getNewBuildingItem);
+
+    //create entrances
+    const entrances = getBuildingEntrances(entranceIdSeedStart, entranceCounts, entrancePerBuilding, buildings);
+    addArrayToDb(entrances, dynamoDbTableName, insertMultiChildParentItem, insertDelay);
 }
 
 /**
@@ -96,18 +114,14 @@ function insertItem <T extends ItemBase> (item: T, dynamoDbTableName: string) {
     addItemToDb(item, dynamoDbTableName, dynamoDoc);
 } 
 
-/**
- * Function for inserting customers and customer_contracts into the DB
- * @param item 
- */
-const insertCutomerContract = (item: CustomerContractInternal, dynamoDbTableName: string) => {
+function insertChildParentItem <T1 extends ItemBase, T2 extends ItemBase>(item: ChildParentInternal<T1, T2>, dynamoDbTableName: string)  {
     addItemToDb(item.db_item, dynamoDbTableName, dynamoDoc);
-    addItemToDb(item.customer_db_item, dynamoDbTableName, dynamoDoc);
+    addItemToDb(item.parent_db_item, dynamoDbTableName, dynamoDoc);
 }
 
-const insertSupplierContract = (item: SupplierContractInternal, dynamoDbTableName: string) => {
-    addItemToDb(item.db_item, dynamoDbTableName, dynamoDoc);
-    addItemToDb(item.supplier_db_item, dynamoDbTableName, dynamoDoc);
+function insertMultiChildParentItem <T1 extends ItemBase, T2 extends ItemBase>(item: MultiChildParentInternal<T1, T2>, dynamoDbTableName: string)  {
+    item.db_items.forEach(i => addItemToDb(i, dynamoDbTableName, dynamoDoc));
+    addItemToDb(item.parent_db_item, dynamoDbTableName, dynamoDoc);
 }
 
 /**
@@ -137,37 +151,25 @@ function addArrayToDb <T>(
     }, delayMs);
 }
 
-function getCustomersAndContracts(idSeedStart : number, elemCount: number, customers: Customer[]) {
-    // create customer_contracts and customers
-    const customerContracts = [];
-
-    for (let i = idSeedStart; i < idSeedStart + elemCount; i++){
-        const contract = getNewCustomerContractItem(i++, oneOf(customers));
-        customerContracts.push(contract);
-    }
-
-    return customerContracts;
+function getCustomerContracts(idSeedStart : number, elemCount: number, customers: Customer[]) {
+    return getChildRecordsInternal(idSeedStart, elemCount, customers, getNewCustomerContractItem);
 }
 
-function getSuppliersAndContracts(idSeedStart : number, elemCount: number, suppliers: Supplier[]) {
-    // create customer_contracts and customers
-    const customerContracts = [];
-
-    for (let i = idSeedStart; i < idSeedStart + elemCount; i++){
-        const contract = getNewSupplierContractItem(i++, oneOf(suppliers));
-        customerContracts.push(contract);
-    }
-
-    return customerContracts;
+function getSupplierContracts(idSeedStart : number, elemCount: number, suppliers: Supplier[]) {
+    return getChildRecordsInternal(idSeedStart, elemCount, suppliers, getNewSupplierContractItem);
 }
 
-function getPafContractLists(pafs: PriceAdjustmentFormula[], customerContracts: CustomerContractInternal[], contractsPerPaf: number) {
+function getBuildingEntrances(idSeedStart : number, elemCount: number, childPerParent: number, buildings: Building[]) {
+    return getChildMultiRecordsInternal(idSeedStart, elemCount, childPerParent, buildings, getNewBuildingEntranceItems);
+}
+
+function getPafContractLists<TContract extends ItemBase>(pafs: PriceAdjustmentFormula[], contracts: TContract[], contractsPerPaf: number) {
     // create adjucency list to implement many-to-many between pafs and contracts
-    const pafContractRelations: { paf: PriceAdjustmentFormula; contract: CustomerContract }[] = [];
+    const pafContractRelations: { paf: PriceAdjustmentFormula; contract: TContract }[] = [];
 
     for (let i = 0; i < pafs.length; i++) {
         // assign random contracts to each paf
-        const thisPafContracts = fewTimesOneOf(customerContracts.map(i=>i.db_item), contractsPerPaf, 10);
+        const thisPafContracts = fewTimesOneOf(contracts, contractsPerPaf, 10);
 
         thisPafContracts.forEach((c) => {
             pafContractRelations.push({
@@ -178,4 +180,33 @@ function getPafContractLists(pafs: PriceAdjustmentFormula[], customerContracts: 
     }
 
     return pafContractRelations;
+}
+
+function getChildRecordsInternal<T1, T2>(
+    idSeedStart : number, 
+    elemCount: number, parents: T1[], 
+    createChildInternalFunc: (index: number, parent: T1) => T2): T2[] {
+    const childRecords = [];
+
+    for (let i = idSeedStart; i < idSeedStart + elemCount; i++){
+        const contract = createChildInternalFunc(i++, oneOf(parents));
+        childRecords.push(contract);
+    }
+
+    return childRecords;
+}
+
+function getChildMultiRecordsInternal<T1, T2>(
+    idSeedStart : number, 
+    elemCount: number, 
+    childPerParent: number,
+    parents: T1[], createChildrenInternalFunc: (index: number, parent: T1, childPerParent: number) => T2): T2[] {
+    const childRecords = [];
+
+    for (let i = idSeedStart; i < idSeedStart + elemCount; i++){
+        const contract = createChildrenInternalFunc(i++, oneOf(parents), childPerParent);
+        childRecords.push(contract);
+    }
+
+    return childRecords;
 }

@@ -4,3 +4,5 @@ export * from './customer.interface';
 export * from './paf-contract.interface';
 export * from './paf.interface';
 export * from './supplier-contract.interface';
+export * from './building.interface';
+export * from './building-entrance.interface';

@@ -20,6 +20,7 @@ export const fakeValueArrays = {
     supplier_lastNames : ["Innuendo", "Mercury", "Taylor", "May", "Kruger", "Deacon", "Meladze"],
     industry_sectors: ["Oil & Gas", "Electricity", "Water"],
     supplier_comments : ["super supplier", "ok", "forgets to deliver in time", "bad communication", "mediocre relationship"],
+    building_categories: ["apartment building", "industry building", "school", "univercity", "mall"]
 }
 
 

@@ -1,7 +1,9 @@
 import { ItemBase } from "./base/item-base.interface";
-import { CustomerContractBase } from "./base/customer-contract-base.interface";
+import { ContractBase } from "./base";
 
-export interface PriceAdjustmentFormulaContract extends ItemBase, CustomerContractBase {
+export interface PriceAdjustmentFormulaContract extends ItemBase, ContractBase {
+    customer_contract_id?: string,
+    supply_contract_id?: string
     /**
      ItemBase overrides
 

@@ -7,3 +7,5 @@ export * from './supplier-base.interface';
 export * from './contract-base.interface';
 export * from './contract-signer.interface';
 export * from './contract-base.interface';
+export * from './building-base.interface';
+export * from './building-entrance-base.interface';

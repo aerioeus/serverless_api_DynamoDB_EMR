@@ -1,9 +1,9 @@
 import { getCurrentDateTimeLikeAws, getNewGuid } from "./factory.utils";
-import { CustomerContractInternal } from "../models/internal/customer-contract.internal.interface";
 import { Customer, CustomerContract } from "../models";
 import { getNewContractItem } from "./contract-base.factory";
+import { ChildParentInternal } from "../models/internal/child-parent-item.internal.interface";
 
-export function getNewCustomerContractItem(index: any, customer: Customer): CustomerContractInternal {
+export function getNewCustomerContractItem(index: any, customer: Customer): ChildParentInternal<CustomerContract, Customer> {
 
     const signer = {
         first_name: customer.customer_contact_person.customer_contact_person_first_name,
@@ -29,10 +29,10 @@ export function getNewCustomerContractItem(index: any, customer: Customer): Cust
     let item = {
         db_item: contract_item,
         // make a copy of cutomer object to be able to change customer_db_item.pk_id field for each contract
-        customer_db_item: Object.assign({}, customer)
+        parent_db_item: Object.assign({}, customer)
     };
 
-    item.customer_db_item.pk_id = item.db_item.pk_id;
+    item.parent_db_item.pk_id = item.db_item.pk_id;
 
     return item;
 }
