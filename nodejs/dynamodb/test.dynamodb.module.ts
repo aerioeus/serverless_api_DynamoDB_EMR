@@ -1,3 +1,3 @@
 import { fillDynamoDbTable } from "./dynamodb.module";
 
-fillDynamoDbTable(100, 12);
+fillDynamoDbTable(100, 6);

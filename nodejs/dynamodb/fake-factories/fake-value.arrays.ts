@@ -25,5 +25,7 @@ export const fakeValueArrays = {
     hydraulic_circuite_types: ["Drosselschaltung", "Umlenkschaltung", "Beimischschaltung (Mischventil)", "Beimischschaltung (Verteilerventil)", "Beimischschaltung (differenzdrucklosem Verteiler)"],
     distribution_classifications: ["Wärmenetz", "Stromnetz", "Gasnetz"],
     distribution_network_types: ["Erzeugerkreislauf", "Verteilerkreislauf", "Verbraucherkreislauf (immer Heizwärme)", "Zirkulationskreislauf"],
-    materials: ["copper", "aluminium", "plastic"]
+    materials: ["copper", "aluminium", "plastic"],
+    manufacturers: ["Buderus", "Weishaupt", "Magra", "PEWO", "Sauter", "Huch", "Reflex Winkelmann", "Honeywell centra", "Viessmann"],
+    fuel_categories: ["Gas", "Oil"]
 }

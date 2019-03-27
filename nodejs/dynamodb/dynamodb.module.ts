@@ -10,19 +10,37 @@ import {
     getNewCustomerItem,
     getNewPafItem,
     fewTimesOneOf,
-    getContractPafItem } from "./fake-factories";
-import { PriceAdjustmentFormula, CustomerContract, Customer, Building, Pod } from "./models";
+    getContractPafItem, 
+    getNewDnCirculationPumpItems,
+    getNewDnControlUnitItems,
+    getNewDnDistributionBlockItems,
+    getNewDnDistrictHeatingStationItems,
+    getNewDnExhaustSystemItems,
+    getNewDnExpansionTankItems,
+    getNewDnFittingItems,
+    getNewDnFuelTankItems,
+    getNewDnHeatExchangerItems,
+    getNewDnHydraulicSwitchItems,
+    getNewDnPressureControlItems,
+    getNewDnThermoControlItems,
+    getNewDnWaterStorageItems,
+    getNewSupplierContractItem,
+    getNewSupplierItem,
+    getNewBuildingEntranceItems,
+    getNewBuildingItem,
+    getNewPodItem,
+    getNewPodInspectionItems,
+    getNewPodMaintenanceItems,
+    getNewPodDistributionNetworkItems,
+    getNewDnBoilerItems,
+    getNewDnBurnerItems,
+    getNewRepairItems,
+    getNewDnActuatorItems
+} from "./fake-factories";
+import { PriceAdjustmentFormula, Customer, Building, Pod, PodDistributionNetwork, Repair } from "./models";
 import { ItemBase } from "./models/base";
-import { Supplier } from "./models/supplier.interface";
-import { getNewSupplierContractItem } from "./fake-factories/supplier-contract.factory";
-import { getNewSupplierItem } from "./fake-factories/supplier.factory";
-import { getNewBuildingEntranceItems } from "./fake-factories/building-entrance.factory";
+import { Supplier } from "./models/supplier/supplier.interface";
 import { ChildParentInternal } from "./models/internal/child-parent-item.internal.interface";
-import { getNewBuildingItem } from "./fake-factories/building.factory";
-import { getNewPodItem } from "./fake-factories/pod.factory";
-import { getNewPodInspectionItems } from "./fake-factories/pod-inspection.factory";
-import { getNewPodMaintenanceItems } from "./fake-factories/pod-maintenance.factory";
-import { getNewPodDistributionNetworkItems } from "./fake-factories/pod-distribution-network.factory";
 
 export const dynamoDoc = new DynamoDB.DocumentClient({
     region: awsConfig.region,
@@ -43,8 +61,13 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     // there will be 3 times less buildings than entrances
     const entrancePerBuilding = 3;
 
-    // there will be 3 times less pod children (DNs, maintenances, inspections) than pods
+    // 3 pod children (DNs, maintenances, inspections) per pod
     const childPerPod = 3;
+
+    // 4 components per distribution network
+    const componentsPerNetwork = 4;
+
+    const repairsPerComponent = 2;
     
     const customerIdSeedStart = idSeedStart * getRandom(idSeedStart);
     const customerCount = +(elemCount / contractsPerCustomer).toFixed();
@@ -62,7 +85,10 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     const podsCount = elemCount / 2;
 
     const podChildIdSeedStart = idSeedStart * getRandom(idSeedStart);
-    const podChildrenCount = +(podsCount / childPerPod).toFixed();
+
+    const techCompIdSeedStart = idSeedStart * getRandom(idSeedStart);
+
+    const repairIdSeedStart = idSeedStart * getRandom(idSeedStart);
 
     // create pafs (common for customers and suppliers)
     const pafs = createItems(pafIdSeedStart, pafsCount, getNewPafItem);
@@ -127,6 +153,88 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     //create distribution networks
     const dns = getPodDistributionNetworks(podChildIdSeedStart, childPerPod, pods);
     addArrayToDb(dns, dynamoDbTableName, insertItem, insertDelay);
+
+    //create technical components and repaires
+    const components = new Map<string, ItemBase[]>();
+    const repairs = new Array<Repair>();
+
+    //actuators
+    const actuators = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnActuatorItems);
+    components.set("actuator", actuators);
+
+    //boilers
+    const boilers = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnBoilerItems);
+    components.set("boiler", boilers);
+    
+    //burners
+    const burners = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnBurnerItems);
+    components.set("burner", burners);
+
+    //circulation pumps
+    const circulation_pumps = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnCirculationPumpItems);
+    components.set("circulation pump", circulation_pumps);
+
+    //control units
+    const control_units = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnControlUnitItems);
+    components.set("control unit", control_units);
+
+
+    //distribution blocks
+    const distribution_blocks = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnDistributionBlockItems);
+    components.set("distribution block", distribution_blocks);
+
+    //district heating stations
+    const district_heating_stations = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnDistrictHeatingStationItems);
+    components.set("district heating station", district_heating_stations);
+
+    //exhaust systems
+    const exhaust_systems = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnExhaustSystemItems);
+    components.set("exhaust system", exhaust_systems);
+
+    //expansion tanks
+    const expansion_tanks = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnExpansionTankItems);
+    components.set("expansion tank", expansion_tanks);
+
+    //fittings
+    const fittings = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnFittingItems);
+    components.set("fitting", fittings);
+
+    //fuel-tanks
+    const fuel_tanks = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnFuelTankItems);
+    components.set("fuel tank", fuel_tanks);
+
+    //heat exchangers
+    const heat_exchangers = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnHeatExchangerItems);
+    components.set("heat exchanger", heat_exchangers);
+
+    //hydraulic switches
+    const hydraulic_switches = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnHydraulicSwitchItems);
+    components.set("hydraulic switch", hydraulic_switches);
+
+    //pressure controls
+    const pressure_controls = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnPressureControlItems);
+    components.set("pressure control", pressure_controls);
+
+    //thermo controls
+    const thermo_controls = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnThermoControlItems);
+    components.set("thermo control", thermo_controls);
+
+    //water storages
+    const water_storages = getTechnicalcomponents(techCompIdSeedStart, componentsPerNetwork, dns, getNewDnWaterStorageItems);
+    components.set("water storage", water_storages);
+
+    // insert components, create repairs for each of them 
+    components.forEach((valueArray: ItemBase[], key: string)=> {
+        addArrayToDb(valueArray, dynamoDbTableName, insertItem, insertDelay);
+
+        valueArray.forEach((comp: ItemBase, ind: number) => {
+            const compRepairs = getNewRepairItems(repairIdSeedStart+ ind*repairsPerComponent, comp, repairsPerComponent, key);
+            compRepairs.forEach(r => repairs.push(r));
+        });
+    });
+
+    //insert repairs
+    addArrayToDb(repairs, dynamoDbTableName, insertItem, insertDelay);
 }
 
 /**
@@ -199,7 +307,7 @@ function getPodDistributionNetworks(idSeedStart : number, childPerParent: number
     return getChildMultiRecordsInternal(idSeedStart,childPerParent, pods, getNewPodDistributionNetworkItems);
 }
 
-function getPafContractLists<TContract extends ItemBase>(pafs: PriceAdjustmentFormula[], contracts: TContract[], contractsPerPaf: number) {
+function getPafContractLists<TContract extends ItemBase> (pafs: PriceAdjustmentFormula[], contracts: TContract[], contractsPerPaf: number) {
     // create adjucency list to implement many-to-many between pafs and contracts
     const pafContractRelations: { paf: PriceAdjustmentFormula; contract: TContract }[] = [];
 
@@ -216,6 +324,15 @@ function getPafContractLists<TContract extends ItemBase>(pafs: PriceAdjustmentFo
     }
 
     return pafContractRelations;
+}
+
+function getTechnicalcomponents<T>(
+    idSeedStart : number, 
+    childPerParent: number, 
+    networks: PodDistributionNetwork[], 
+    getComponent: (index: number, dn: PodDistributionNetwork, childCount: number) => T[]): T[] {
+
+    return getChildMultiRecordsInternal(idSeedStart, childPerParent, networks, getComponent);
 }
 
 function getChildRecordsInternal<T1, T2>(
@@ -235,7 +352,8 @@ function getChildRecordsInternal<T1, T2>(
 function getChildMultiRecordsInternal<T1, T2>(
     idSeedStart : number, 
     childPerParent: number,
-    parents: T1[], createChildrenInternalFunc: (index: number, parent: T1, childPerParent: number) => T2[]): T2[] {
+    parents: T1[], 
+    createChildrenInternalFunc: (index: number, parent: T1, childPerParent: number) => T2[]): T2[] {
         if(parents.length == 0){
             return [];
         }

@@ -11,6 +11,10 @@ export function oneOf <T>(items: T[]){
     return items[index];
 }
 
+export function oneOfYesNo(){
+    return oneOf(["yes", "no"]);
+}
+
 export function getRandomDate(yearBase: number, yearIncr: number){
     return `${zeroPad(1 + getRandom(11), 2)}/${zeroPad(1 + getRandom(27), 2)}/${yearBase +  getRandom(yearIncr)}`;
 }
