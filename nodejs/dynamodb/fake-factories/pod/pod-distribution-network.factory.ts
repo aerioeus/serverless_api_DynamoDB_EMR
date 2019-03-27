@@ -2,11 +2,11 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom} from "../facto
 import { Pod, PodDistributionNetwork } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewPodDistributionNetworkItems(index: any, pod: Pod, childCount: number): PodDistributionNetwork[] {
+export function getNewPodDistributionNetworkItems(start_index: any, pod: Pod, childCount: number): PodDistributionNetwork[] {
     const dbItems = [];
 
-    for (let i = index; i < index + childCount; i++){
-        const distribution_network_id = `DN_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const distribution_network_id = `DN_${i}`;
         const hydraulic_circuite_type = oneOf(fakeValueArrays.hydraulic_circuite_types);
         const distribution_network_type = oneOf(fakeValueArrays.distribution_network_types);
 

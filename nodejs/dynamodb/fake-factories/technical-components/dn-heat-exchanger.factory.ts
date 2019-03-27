@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, HeatExchanger } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnHeatExchangerItems(index: number, dn: PodDistributionNetwork, childCount: number): HeatExchanger[] {
+export function getNewDnHeatExchangerItems(start_index: number, dn: PodDistributionNetwork, childCount: number): HeatExchanger[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnHeatExchangerItems(index: number, dn: PodDistributionNet
     gsi_2_sk:   = { heat_exchanger_info.principle}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const heat_exchanger_id = `HeatExchanger_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const heat_exchanger_id = `HeatExchanger_${i}`;
         const standard_capacity  = `${5 + getRandom(12)} kW`;
         const principle = oneOf(["analog", "digital"]);
 
@@ -30,7 +30,7 @@ export function getNewDnHeatExchangerItems(index: number, dn: PodDistributionNet
 
             heat_exchanger_id: heat_exchanger_id,
             heat_exchanger_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            heat_exchanger_serial_number: `2W${index}JK-2V`,
+            heat_exchanger_serial_number: `2W${i}JK-2V`,
          
             heat_exchanger_info:{
                 base_info: {

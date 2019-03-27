@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, ControlUnit, PressureControl } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnPressureControlItems(index: number, dn: PodDistributionNetwork, childCount: number): PressureControl[] {
+export function getNewDnPressureControlItems(start_index: number, dn: PodDistributionNetwork, childCount: number): PressureControl[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnPressureControlItems(index: number, dn: PodDistributionN
     gsi_2_sk:   = { pressure_control_info.physical_pressure_control_type}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const pressure_control_id = `PressureControl_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const pressure_control_id = `PressureControl_${i}`;
         const response_pressure  = `${1 + getRandom(6)} Bar`;
         const DN = `${10 + getRandom(50)} DN`;
 
@@ -33,7 +33,7 @@ export function getNewDnPressureControlItems(index: number, dn: PodDistributionN
 
             pressure_control_id: pressure_control_id,
             pressure_control_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            pressure_control_serial_number: `2W${index}JK-2X`,
+            pressure_control_serial_number: `2W${i}JK-2X`,
 
             pressure_control_info: {
                 base_info: {

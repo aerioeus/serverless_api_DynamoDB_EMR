@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate 
 import { PodDistributionNetwork, Actuator } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnActuatorItems(index: number, dn: PodDistributionNetwork, childCount: number): Actuator[] {
+export function getNewDnActuatorItems(start_index: number, dn: PodDistributionNetwork, childCount: number): Actuator[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnActuatorItems(index: number, dn: PodDistributionNetwork,
         gsi_2_sk:   = { actuator_info.operating_principle }
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const actuator_id = `Actuator_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const actuator_id = `Actuator_${i}`;
         const power_supply_voltage  = oneOf(["220 V", "230 V"]);
         const operating_principle = oneOf(["elektrisch", "thermostatisch"]);
 
@@ -30,7 +30,7 @@ export function getNewDnActuatorItems(index: number, dn: PodDistributionNetwork,
 
             actuator_id: actuator_id,
             actuator_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            actuator_serial_number: `RHQQ-W*34${index}/`,
+            actuator_serial_number: `RHQQ-W*34${i}/`,
          
             actuator_info: {
                 base_info: {

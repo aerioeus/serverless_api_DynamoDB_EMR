@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, ExhaustSystem } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnExhaustSystemItems(index: number, dn: PodDistributionNetwork, childCount: number): ExhaustSystem[] {
+export function getNewDnExhaustSystemItems(start_index: number, dn: PodDistributionNetwork, childCount: number): ExhaustSystem[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnExhaustSystemItems(index: number, dn: PodDistributionNet
     gsi_2_sk:   = { exhaust_system_info.air}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const exhaust_system_id = `ExhaustSystem_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const exhaust_system_id = `ExhaustSystem_${i}`;
         const dimension  = getRandom(200).toString();
         const air = oneOfYesNo();
 
@@ -30,7 +30,7 @@ export function getNewDnExhaustSystemItems(index: number, dn: PodDistributionNet
 
             exhaust_system_id: exhaust_system_id,
             exhaust_system_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            exhaust_system_serial_number: `2W${index}JK-2Z`,
+            exhaust_system_serial_number: `2W${i}JK-2Z`,
             exhaust_system_material: "copper",
             
             exhaust_system_info: {

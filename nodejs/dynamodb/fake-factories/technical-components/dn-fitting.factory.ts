@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, Fitting } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnFittingItems(index: number, dn: PodDistributionNetwork, childCount: number): Fitting[] {
+export function getNewDnFittingItems(start_index: number, dn: PodDistributionNetwork, childCount: number): Fitting[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnFittingItems(index: number, dn: PodDistributionNetwork, 
     gsi_2_sk:   = { fitting_info.type}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const fitting_id = `Fitting_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const fitting_id = `Fitting_${i}`;
         const fitting_type  = oneOf(["Schieber", "Absperrhahn", "2-Wege Mischer", "3-Wege Mischer", "4-Wege Mischer", "Rückschlagklappe Drosselklappe Schnellschlussklappe", "Schmutzfänger", "Schwerkraftbremse"]);
         const type = oneOf(["Mischer", "Ventil"]);
 
@@ -30,7 +30,7 @@ export function getNewDnFittingItems(index: number, dn: PodDistributionNetwork, 
 
             fitting_id: fitting_id,
             fitting_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            fitting_serial_number: `2W${index}JK-2L`,
+            fitting_serial_number: `2W${i}JK-2L`,
          
             fitting_info: {
                 base_info: {

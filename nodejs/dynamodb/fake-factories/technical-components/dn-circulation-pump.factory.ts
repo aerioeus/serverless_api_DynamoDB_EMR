@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, CirculationPump } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnCirculationPumpItems(index: number, dn: PodDistributionNetwork, childCount: number): CirculationPump[] {
+export function getNewDnCirculationPumpItems(start_index: number, dn: PodDistributionNetwork, childCount: number): CirculationPump[] {
     const dbItems = [];
     /**
      ItemBase overrides
@@ -13,8 +13,8 @@ export function getNewDnCirculationPumpItems(index: number, dn: PodDistributionN
     gsi_2_sk:   = { circulation_pump_info.user_case_pump}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const circulation_pump_id = `CirculationPump_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const circulation_pump_id = `CirculationPump_${i}`;
         const control_type  = oneOf(["auto", "delta_p-c konstant", "delta_p-c V-variabel", "delta_p-c T-aussentemperaturgeführte", "differenzdruckregeleung", "delta_p-c T-spreizungsgeführte"]);
         const user_case_pump = oneOf(["Kesselkreis", "Rücklaufanhebung", "Warmwasserspeicherladung", "Warmwasserspeicherladung-primär", 
         "Warmwasserspeicherladung-sekundär", "Solarspeicherladung-primär", "Solarspeicherladung-sekundär"]);
@@ -30,7 +30,7 @@ export function getNewDnCirculationPumpItems(index: number, dn: PodDistributionN
 
             circulation_pump_id: circulation_pump_id,
             circulation_pump_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            circulation_pump_serial_number: `RHQQ-W*34${index}/`,
+            circulation_pump_serial_number: `RHQQ-W*34${i}/`,
          
             circulation_pump_info: {
                 base_info: {

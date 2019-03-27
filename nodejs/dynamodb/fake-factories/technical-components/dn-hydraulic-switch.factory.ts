@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, ControlUnit, HydraulicSwitch } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnHydraulicSwitchItems(index: number, dn: PodDistributionNetwork, childCount: number): HydraulicSwitch[] {
+export function getNewDnHydraulicSwitchItems(start_index: number, dn: PodDistributionNetwork, childCount: number): HydraulicSwitch[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnHydraulicSwitchItems(index: number, dn: PodDistributionN
     gsi_2_sk:   = { hydraulic_switch_info.pipe_cross_section}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const hydraulic_switch_id = `HydraulicSwitch_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const hydraulic_switch_id = `HydraulicSwitch_${i}`;
         const pipe_cross_section  = `${10+getRandom(30)} DN`;
 
         const dbItem = {
@@ -29,7 +29,7 @@ export function getNewDnHydraulicSwitchItems(index: number, dn: PodDistributionN
 
             hydraulic_switch_id: hydraulic_switch_id, 
             hydraulic_switch_manufacturer: oneOf(fakeValueArrays.manufacturers), 
-            hydraulic_switch_serial_number: `2W${index}JK-2F`,
+            hydraulic_switch_serial_number: `2W${i}JK-2F`,
              
             hydraulic_switch_info: {
                 base_info: {

@@ -2,11 +2,11 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate 
 import { Pod, PodMaintenance } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewPodMaintenanceItems(index: any, pod: Pod, childCount: number): PodMaintenance[] {
+export function getNewPodMaintenanceItems(start_index: any, pod: Pod, childCount: number): PodMaintenance[] {
     const dbItems = [];
 
-    for (let i = index; i < index + childCount; i++) {
-        const maintenance_id = `Maintenance_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++) {
+        const maintenance_id = `Maintenance_${i}`;
         const maintenance_company = oneOf(fakeValueArrays.inspection_maintenance_companies);
         const maintenance_date = getRandomDate(2016, 2);
 

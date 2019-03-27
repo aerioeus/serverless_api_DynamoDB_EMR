@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate 
 import { PodDistributionNetwork, Burner } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnBurnerItems(index: number, dn: PodDistributionNetwork, childCount: number): Burner[] {
+export function getNewDnBurnerItems(start_index: number, dn: PodDistributionNetwork, childCount: number): Burner[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnBurnerItems(index: number, dn: PodDistributionNetwork, c
     gsi_2_sk:   = { burner_info.capacity}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const burner_id = `Burner_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const burner_id = `Burner_${i}`;
         const operation_mode  = oneOf(["einstufig", "zweistufig", "dreistufig", "modulierend"]);
         const capacity = `${500+getRandom(500)} kW`;
 
@@ -30,7 +30,7 @@ export function getNewDnBurnerItems(index: number, dn: PodDistributionNetwork, c
 
             burner_id: burner_id,
             burner_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            burner_serial_number: `2W${index}K-2A`,
+            burner_serial_number: `2W${i}K-2A`,
          
             burner_info: {
                 base_info: {

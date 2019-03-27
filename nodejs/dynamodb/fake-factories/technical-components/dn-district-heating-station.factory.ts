@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, DistributionBlock, DistrictHeatingStation } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnDistrictHeatingStationItems(index: number, dn: PodDistributionNetwork, childCount: number): DistrictHeatingStation[] {
+export function getNewDnDistrictHeatingStationItems(start_index: number, dn: PodDistributionNetwork, childCount: number): DistrictHeatingStation[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnDistrictHeatingStationItems(index: number, dn: PodDistri
     gsi_2_sk:   = { district_heating_station_info.capacity}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const district_heating_station_id = `DistrictHeatingStation_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const district_heating_station_id = `DistrictHeatingStation_${i}`;
         const principle = oneOf(["druckbehaftet", "drucklos", "ohne Hauptpumpe (Saugverteiler)", "mit Hauptpumpe (Druckverteiler)", 
         "mit Hauptpumpe und drucklosen", "Verteiler hydraulische Weiche"]);
         const capacity = `${200 + getRandom(300)} kW`;
@@ -31,7 +31,7 @@ export function getNewDnDistrictHeatingStationItems(index: number, dn: PodDistri
 
             district_heating_station_id: district_heating_station_id,
             district_heating_station_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            district_heating_station_serial_number: `2W${index}JK-2C`,
+            district_heating_station_serial_number: `2W${i}JK-2C`,
         
             district_heating_station_info: {
                 base_info: {

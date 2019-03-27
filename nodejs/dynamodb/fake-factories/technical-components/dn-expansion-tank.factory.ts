@@ -3,7 +3,7 @@ import { PodDistributionNetwork } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 import { ExpansionTank } from "../../models/technical-components/expansion-tank.interface";
 
-export function getNewDnExpansionTankItems(index: number, dn: PodDistributionNetwork, childCount: number): ExpansionTank[] {
+export function getNewDnExpansionTankItems(start_index: number, dn: PodDistributionNetwork, childCount: number): ExpansionTank[] {
     const dbItems = [];
 
     /**
@@ -15,8 +15,8 @@ export function getNewDnExpansionTankItems(index: number, dn: PodDistributionNet
     gsi_2_sk:   = { expansion_tank_info.type}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const expansion_tank_id = `ExpansionTank_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const expansion_tank_id = `ExpansionTank_${i}`;
         const volume  = getRandom(500).toString();
         const type = oneOf(["MAG", "Pumpen Druckhaltung", "Kompressordruckhaltung"]);
 
@@ -31,7 +31,7 @@ export function getNewDnExpansionTankItems(index: number, dn: PodDistributionNet
 
             expansion_tank_id: expansion_tank_id,
             expansion_tank_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            expansion_tank_serial_number: `2W${index}JK-2Y`,
+            expansion_tank_serial_number: `2W${i}JK-2Y`,
          
             expansion_tank_info: {
                 base_info: {

@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, ControlUnit } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnControlUnitItems(index: number, dn: PodDistributionNetwork, childCount: number): ControlUnit[] {
+export function getNewDnControlUnitItems(start_index: number, dn: PodDistributionNetwork, childCount: number): ControlUnit[] {
     const dbItems = [];
 
     /**
@@ -15,8 +15,8 @@ export function getNewDnControlUnitItems(index: number, dn: PodDistributionNetwo
     */
 
 
-    for (let i = index; i < index + childCount; i++){
-        const control_unit_id = `ControlUnit_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const control_unit_id = `ControlUnit_${i}`;
         const operation_mode  = oneOf(["Tag", "Nacht", "Auto", "kein Programm"]);
         const analog_digital = oneOf(["analog", "digital"]);
 
@@ -31,7 +31,7 @@ export function getNewDnControlUnitItems(index: number, dn: PodDistributionNetwo
 
             control_unit_id: control_unit_id,
             control_unit_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            control_unit_serial_number: `2W${index}JK-2A`,
+            control_unit_serial_number: `2W${i}JK-2A`,
         
             control_unit_info: {
                 base_info: {

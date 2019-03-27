@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, DistributionBlock } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnDistributionBlockItems(index: number, dn: PodDistributionNetwork, childCount: number): DistributionBlock[] {
+export function getNewDnDistributionBlockItems(start_index: number, dn: PodDistributionNetwork, childCount: number): DistributionBlock[] {
     const dbItems = [];
 
     /**
@@ -13,8 +13,8 @@ export function getNewDnDistributionBlockItems(index: number, dn: PodDistributio
     gsi_1_sk    = { distribution_block_info.type }
     gsi_2_sk:   = { distribution_block_info.type}
     */
-    for (let i = index; i < index + childCount; i++){
-        const distribution_block_id = `DistributionBlock_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const distribution_block_id = `DistributionBlock_${i}`;
         const type = oneOf(["druckbehaftet", "drucklos", "ohne Hauptpumpe (Saugverteiler)", "mit Hauptpumpe (Druckverteiler)", 
         "mit Hauptpumpe und drucklosen", "Verteiler hydraulische Weiche"]);
 
@@ -29,7 +29,7 @@ export function getNewDnDistributionBlockItems(index: number, dn: PodDistributio
 
             distribution_block_id: distribution_block_id,
             distribution_block_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            distribution_block_serial_number: `2W${index}JK-2B`,
+            distribution_block_serial_number: `2W${i}JK-2B`,
         
             distribution_block_info: {
                 base_info: {

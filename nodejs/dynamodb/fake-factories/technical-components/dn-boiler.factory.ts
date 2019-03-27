@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate 
 import { PodDistributionNetwork, Boiler } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnBoilerItems(index: number, dn: PodDistributionNetwork, childCount: number): Boiler[] {
+export function getNewDnBoilerItems(start_index: number, dn: PodDistributionNetwork, childCount: number): Boiler[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnBoilerItems(index: number, dn: PodDistributionNetwork, c
     gsi_2_sk:   = { boiler_info.efficency }
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const boiler_id = `Boiler_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const boiler_id = `Boiler_${i}`;
         const fuel_category = oneOf(fakeValueArrays.fuel_categories);
         const boiler_efficency = `${50+getRandom(50)}%`;
 
@@ -29,7 +29,7 @@ export function getNewDnBoilerItems(index: number, dn: PodDistributionNetwork, c
             item_type_debug: "Boiler",
             boiler_id: boiler_id,
             boiler_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            boiler_serial_number: `12Z4K212${index}`,   
+            boiler_serial_number: `12Z4K212${i}`,   
         
             boiler_info: {
                 base_info: {

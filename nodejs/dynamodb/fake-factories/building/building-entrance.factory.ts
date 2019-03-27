@@ -2,10 +2,10 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom } from "../fact
 import { Building, BuildingEntrance } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewBuildingEntranceItems(index: any, building: Building, childCount: number): BuildingEntrance[] {
+export function getNewBuildingEntranceItems(start_Index: any, building: Building, childCount: number): BuildingEntrance[] {
     const dbItems = [];
 
-    for (let i = index; i < index + childCount; i++){
+    for (let index = start_Index; index < start_Index + childCount; index++){
         const entrance_id = `Ent_${index}`;
         const entrance_street = oneOf(fakeValueArrays.streets);
         const entrance_place = oneOf(fakeValueArrays.cities);

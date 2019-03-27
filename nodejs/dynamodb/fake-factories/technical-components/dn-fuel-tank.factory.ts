@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, FuelTank } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnFuelTankItems(index: number, dn: PodDistributionNetwork, childCount: number): FuelTank[] {
+export function getNewDnFuelTankItems(start_index: number, dn: PodDistributionNetwork, childCount: number): FuelTank[] {
     const dbItems = [];
     /**
      ItemBase overrides
@@ -13,8 +13,8 @@ export function getNewDnFuelTankItems(index: number, dn: PodDistributionNetwork,
     gsi_2_sk:   = { fuel_tank_info.fuel_category}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const fuel_tank_id = `ControlUnit_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const fuel_tank_id = `ControlUnit_${i}`;
         const type  = oneOf(["metal", "copper", "steel"]);
         const fuel_category = oneOf(fakeValueArrays.fuel_categories);
 
@@ -29,7 +29,7 @@ export function getNewDnFuelTankItems(index: number, dn: PodDistributionNetwork,
 
             fuel_tank_id: fuel_tank_id,
             fuel_tank_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            fuel_tank_serial_number: `2W${index}JK-2J`,
+            fuel_tank_serial_number: `2W${i}JK-2J`,
          
             fuel_tank_info: {
                 base_info: {

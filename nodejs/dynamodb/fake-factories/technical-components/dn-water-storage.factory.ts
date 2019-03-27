@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, WaterStorage } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnWaterStorageItems(index: number, dn: PodDistributionNetwork, childCount: number): WaterStorage[] {
+export function getNewDnWaterStorageItems(start_index: number, dn: PodDistributionNetwork, childCount: number): WaterStorage[] {
     const dbItems = [];
     /**
      ItemBase overrides
@@ -13,8 +13,8 @@ export function getNewDnWaterStorageItems(index: number, dn: PodDistributionNetw
     gsi_2_sk:   = { water_storage_info.circuit_type}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const water_storage_id = `WaterStorage_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const water_storage_id = `WaterStorage_${i}`;
         const storage_type  = oneOf(["Speichersystem", "Speicherladesystem"]);
         const circuit_type = oneOf(["Reihenschaltung", "Parallelschaltung"]);
 
@@ -29,7 +29,7 @@ export function getNewDnWaterStorageItems(index: number, dn: PodDistributionNetw
 
             water_storage_id: water_storage_id,
             water_storage_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            water_storage_serial_number: `2W${index}JK-2N`,
+            water_storage_serial_number: `2W${i}JK-2N`,
          
             water_storage_info: {
                 base_info: {

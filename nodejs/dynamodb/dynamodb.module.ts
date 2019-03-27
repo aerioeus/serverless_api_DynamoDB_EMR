@@ -354,14 +354,14 @@ function getChildMultiRecordsInternal<T1, T2>(
     childPerParent: number,
     parents: T1[], 
     createChildrenInternalFunc: (index: number, parent: T1, childPerParent: number) => T2[]): T2[] {
-        if(parents.length == 0){
+        if(parents.length == 0) {
             return [];
         }
 
         const childRecords = new Array<T2>();
 
-        parents.forEach(p=> {
-            const children = createChildrenInternalFunc(idSeedStart, p, childPerParent);
+        parents.forEach((p, index)=> {
+            const children = createChildrenInternalFunc(idSeedStart + index * childPerParent, p, childPerParent);
             children.forEach(c=>childRecords.push(c));
         });
 

@@ -2,7 +2,7 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate,
 import { PodDistributionNetwork, ControlUnit, ThermoControl } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewDnThermoControlItems(index: number, dn: PodDistributionNetwork, childCount: number): ThermoControl[] {
+export function getNewDnThermoControlItems(start_index: number, dn: PodDistributionNetwork, childCount: number): ThermoControl[] {
     const dbItems = [];
 
     /**
@@ -14,8 +14,8 @@ export function getNewDnThermoControlItems(index: number, dn: PodDistributionNet
     gsi_2_sk:   = { thermo_control_info.response_temperature}
     */
 
-    for (let i = index; i < index + childCount; i++){
-        const thermo_control_id = `ThermoControl_${index}`;
+    for (let i = start_index; i < start_index + childCount; i++){
+        const thermo_control_id = `ThermoControl_${i}`;
         const thermostatic_temperature_control_type  = oneOf(["Temperaturregler (TR)", 
         "Sicherheitstemperaturwächter (STW)", "Sicherheitstemperaturbegrenzer (STB)"]);
         const response_temperature = `${1 + getRandom(4)} Bar`;
@@ -31,7 +31,7 @@ export function getNewDnThermoControlItems(index: number, dn: PodDistributionNet
 
             thermo_control_id: thermo_control_id,
             thermo_control_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            thermo_control_serial_number: `2W${index}JK-2F`,
+            thermo_control_serial_number: `2W${i}JK-2F`,
          
             thermo_control_info: {
                 base_info: {
