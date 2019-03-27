@@ -1,5 +1,5 @@
 import { ItemBase } from "./base/item-base.interface";
-import { CustomerBase } from "./base/customer-base.interface";
+import { CustomerBase } from "./base/customer/customer-base.interface";
 
 export interface Customer extends ItemBase, CustomerBase {
     /**

@@ -1,4 +1,4 @@
-import { PriceAdjustmentFormulaBase } from "./base/paf-base.interface";
+import { PriceAdjustmentFormulaBase } from "./base/contract/paf/paf-base.interface";
 import { ItemBase } from "./base/item-base.interface";
 
 export interface PriceAdjustmentFormula extends ItemBase, PriceAdjustmentFormulaBase {
