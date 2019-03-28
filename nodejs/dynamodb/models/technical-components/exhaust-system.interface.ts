@@ -1,25 +1,21 @@
-import { TechnicalComponentBase } from "./technical-component-base.interface";
-import { ItemBase } from "../base";
+import { TechnicalComponentBase } from "../base";
 
-export interface ExhaustSystem extends ItemBase {
+export interface ExhaustSystem extends TechnicalComponentBase {
         /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { exhaust_system_id }
-    gsi_1_sk    = { exhaust_system_info.dimension }
-    gsi_2_sk:   = { exhaust_system_info.air}
+    pk_id       = { exhaust_system_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     exhaust_system_id: string,
-    exhaust_system_manufacturer: string,
-    exhaust_system_serial_number: string,
-    exhaust_system_material: string,
     
     exhaust_system_info: {
-        base_info: TechnicalComponentBase,
         dimension: string,
         air: string,
-        comment: string
+        comment: string,
+        material: string,
     }
 }

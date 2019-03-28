@@ -1,22 +1,18 @@
-import { TechnicalComponentBase } from "./technical-component-base.interface";
-import { ItemBase } from "../base";
+import { TechnicalComponentBase } from "../base";
 
-export interface HeatExchanger extends ItemBase {
+export interface HeatExchanger extends TechnicalComponentBase {
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { heat_exchanger_id }
-    gsi_1_sk    = { heat_exchanger_info.standard_capacity }
-    gsi_2_sk:   = { heat_exchanger_info.principle}
+    pk_id       = { heat_exchanger_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type}
     */
 
     heat_exchanger_id: string,
-    heat_exchanger_manufacturer: string,
-    heat_exchanger_serial_number: string,
 
     heat_exchanger_info:{
-        base_info: TechnicalComponentBase,
         model: string,
         standard_capacity: string,
         primary_volume_flow_manufacturer_value: string,

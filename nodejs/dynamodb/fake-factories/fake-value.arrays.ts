@@ -27,5 +27,7 @@ export const fakeValueArrays = {
     distribution_network_types: ["Erzeugerkreislauf", "Verteilerkreislauf", "Verbraucherkreislauf (immer Heizwärme)", "Zirkulationskreislauf"],
     materials: ["copper", "aluminium", "plastic"],
     manufacturers: ["Buderus", "Weishaupt", "Magra", "PEWO", "Sauter", "Huch", "Reflex Winkelmann", "Honeywell centra", "Viessmann"],
-    fuel_categories: ["Gas", "Oil"]
+    fuel_categories: ["Gas", "Oil"],
+    customer_contract_products: ["Heat", "Oil", "Gas", "Water"],
+    supplier_contract_products: ["Heat delivery", "Oil delivery", "Gas delivery", "Water delivery"]
 }

@@ -5,6 +5,7 @@ export interface ContractBase {
     contract_product_category_type: string,
     contract_terminated: string,
     contract_comment: string,
+    contract_product: string,
     contract_info: {
         signed_on: string,
         signed_by: string,

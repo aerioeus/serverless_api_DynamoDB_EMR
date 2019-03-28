@@ -5,9 +5,9 @@ export interface Pod extends ItemBase {
      ItemBase overrides
 
     pk_id       = { pod_id }
-    sk          = { building_type="Pod" }
-    gsi_1_sk    = { pod_street }
-    gsi_2_sk:   = { pod_zipcode }
+    sk          = { pod_id }
+    gsi_1_sk    = { pod_id }
+    gsi_2_sk:   = { pod_id }
     */
     pod_id: string,
     pod_address: {

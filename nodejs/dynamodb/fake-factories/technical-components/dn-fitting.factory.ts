@@ -8,40 +8,42 @@ export function getNewDnFittingItems(start_index: number, dn: PodDistributionNet
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { fitting_id }
-    gsi_1_sk    = { fitting_info.fitting_type }
-    gsi_2_sk:   = { fitting_info.type}
+    pk_id       = { fitting_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
         const fitting_id = `Fitting_${i}`;
         const fitting_type  = oneOf(["Schieber", "Absperrhahn", "2-Wege Mischer", "3-Wege Mischer", "4-Wege Mischer", "Rückschlagklappe Drosselklappe Schnellschlussklappe", "Schmutzfänger", "Schwerkraftbremse"]);
         const type = oneOf(["Mischer", "Ventil"]);
+        const component_type = "fitting";
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: fitting_id,
-            gsi_1_sk: fitting_type ,
-            gsi_2_sk: type,
-            item_type_debug: "Fitting",
+            pk_id: fitting_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk: component_type,
+            gsi_2_sk: component_type,
+            item_type_debug: "fitting",
 
             fitting_id: fitting_id,
-            fitting_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            fitting_serial_number: `2W${i}JK-2L`,
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `2W${i}JK-2L`,
+            component_base_info: {
+                type_designation: "DR50FA",
+                list_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_date: getRandomDate(1998, 10),
+                purchase_from: oneOf(fakeValueArrays.manufacturers),
+                warranty_until: getRandomDate(2003, 15),
+                installation_date: getRandomDate(2003, 10)
+            },
          
             fitting_info: {
-                base_info: {
-                    type_designation: "DR50FA",
-                    list_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_date: getRandomDate(1998, 10),
-                    purchase_from: oneOf(fakeValueArrays.manufacturers),
-                    warranty_until: getRandomDate(2003, 15),
-                    installation_date: getRandomDate(2003, 10)
-                },
                 fitting_type: fitting_type,
                 type: type,
                 nominal_diameter_fitting: `DN ${getRandom(60)}`,

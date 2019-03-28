@@ -1,22 +1,18 @@
-import { TechnicalComponentBase } from "./technical-component-base.interface";
-import { ItemBase } from "../base";
+import { TechnicalComponentBase } from "../base";
 
-export interface ControlUnit extends ItemBase {
+export interface ControlUnit extends TechnicalComponentBase {
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { control_unit_id }
-    gsi_1_sk    = { control_unit_info.operation_mode }
-    gsi_2_sk:   = { control_unit_info.analog_digital}
+    pk_id       = { control_unit_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     control_unit_id: string,
-    control_unit_manufacturer: string,
-    control_unit_serial_number: string,
 
     control_unit_info: {
-        base_info: TechnicalComponentBase,
         operation_mode: string,
         interface_protocol: string,
         analog_digital: string,

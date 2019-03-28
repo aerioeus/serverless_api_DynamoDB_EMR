@@ -8,41 +8,44 @@ export function getNewDnBurnerItems(start_index: number, dn: PodDistributionNetw
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { burner_id }
-    gsi_1_sk    = { burner_info.operation_mode }
-    gsi_2_sk:   = { burner_info.capacity}
+    pk_id       = { burner_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
         const burner_id = `Burner_${i}`;
         const operation_mode  = oneOf(["einstufig", "zweistufig", "dreistufig", "modulierend"]);
         const capacity = `${500+getRandom(500)} kW`;
+        const component_type = "burner";
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: burner_id,
-            gsi_1_sk: operation_mode ,
-            gsi_2_sk: capacity,
-            item_type_debug: "Burner",
+            pk_id: burner_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk: component_type,
+            gsi_2_sk: component_type,
+            item_type_debug: "burner",
 
             burner_id: burner_id,
-            burner_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            burner_serial_number: `2W${i}K-2A`,
+
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `2W${i}K-2A`,
+            component_base_info: {
+                type_designation: "G5/1-DZD",
+                list_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_date: getRandomDate(1998, 10),
+                purchase_from: oneOf(fakeValueArrays.manufacturers),
+                warranty_until: getRandomDate(2003, 15),
+                installation_date: getRandomDate(2003, 10)
+            },
          
             burner_info: {
-                base_info: {
-                    type_designation: "G5/1-DZD",
-                    list_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_date: getRandomDate(1998, 10),
-                    purchase_from: oneOf(fakeValueArrays.manufacturers),
-                    warranty_until: getRandomDate(2003, 15),
-                    installation_date: getRandomDate(2003, 10)
-                },
-                operation_mode: operation_mode ,
+                operation_mode: operation_mode,
                 capacity: capacity,
                 adjusted_capacity: `${400+getRandom(400)} kW`,
                 interface_protocol: "modbus rs485",

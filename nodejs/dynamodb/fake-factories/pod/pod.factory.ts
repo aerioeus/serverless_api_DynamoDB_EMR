@@ -2,6 +2,15 @@ import { getCurrentDateTimeLikeAws, oneOf, getRandom, getNewGuid } from "../fact
 import { fakeValueArrays } from '../fake-value.arrays';
 import {Pod } from "../../models";
 
+    /**
+     ItemBase overrides
+
+    pk_id       = { pod_id }
+    sk          = { pod_id }
+    gsi_1_sk    = { pod_id }
+    gsi_2_sk:   = { pod_id }
+    */
+
 export function getNewPodItem(index:any): Pod {
 
     const pod_id = `POD-${index}`;
@@ -12,10 +21,10 @@ export function getNewPodItem(index:any): Pod {
         item_id: getNewGuid(),
         item_timestamp: getCurrentDateTimeLikeAws(),
         pk_id: pod_id,
-        sk: "Pod",
-        gsi_1_sk: street,
-        gsi_2_sk: zipcode,
-        item_type_debug: "Pod",
+        sk: pod_id,
+        gsi_1_sk: pod_id,
+        gsi_2_sk: pod_id,
+        item_type_debug: "pod",
         pod_id: pod_id,
         pod_address: {
             pod_address_street: street,

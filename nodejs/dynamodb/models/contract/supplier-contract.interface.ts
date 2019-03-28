@@ -6,8 +6,8 @@ export interface SupplierContract extends ItemBase, SupplierContractBase {
      ItemBase overrides
 
     pk_id       = { supply_contract_id }
-    sk          = { contract_start_date }
-    gsi_1_sk    = { contract_valid_to }
-    gsi_2_sk:   = { contract_partner_type }
+    sk          = { supplier_id }
+    gsi_1_sk    = { supplier_name }
+    gsi_2_sk:   = { supplier_name }
     */
 }

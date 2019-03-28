@@ -1,22 +1,18 @@
-import { TechnicalComponentBase } from "./technical-component-base.interface";
-import { ItemBase } from "../base";
+import { TechnicalComponentBase } from "../base";
 
-export interface DistrictHeatingStation extends ItemBase {
+export interface DistrictHeatingStation extends TechnicalComponentBase {
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { district_heating_station_id }
-    gsi_1_sk    = { district_heating_station_info.principle }
-    gsi_2_sk:   = { district_heating_station_info.capacity}
+    pk_id       = { district_heating_station_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     district_heating_station_id: string,
-    district_heating_station_manufacturer: string,
-    district_heating_station_serial_number: string,
 
     district_heating_station_info: {
-        base_info: TechnicalComponentBase,
         principle: string,
         flow_temperature: string,
         return_temperature: string,

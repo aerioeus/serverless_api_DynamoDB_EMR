@@ -8,39 +8,42 @@ export function getNewDnBoilerItems(start_index: number, dn: PodDistributionNetw
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { boiler_id }
-    gsi_1_sk    = { boiler_info.fuel_category }
-    gsi_2_sk:   = { boiler_info.efficency }
+    pk_id       = { boiler_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
         const boiler_id = `Boiler_${i}`;
         const fuel_category = oneOf(fakeValueArrays.fuel_categories);
         const boiler_efficency = `${50+getRandom(50)}%`;
+        const component_type = 'boiler';
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: boiler_id,
-            gsi_1_sk: fuel_category,
-            gsi_2_sk: boiler_efficency,
-            item_type_debug: "Boiler",
+            pk_id: boiler_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk: component_type,
+            gsi_2_sk: component_type,
+            item_type_debug: "boiler",
             boiler_id: boiler_id,
-            boiler_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            boiler_serial_number: `12Z4K212${i}`,   
-        
+
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `12Z4K212${i}`,   
+            component_base_info: {
+                type_designation: "Logano Plus SE625",
+                list_price_net: `\$${100+getRandom(4000)}`,
+                purchase_price_net: `\$${100+getRandom(4000)}`,
+                purchase_date: getRandomDate(1998, 10),
+                purchase_from: oneOf(fakeValueArrays.manufacturers),
+                warranty_until: getRandomDate(2003, 15),
+                installation_date: getRandomDate(2003, 10)
+            },
+
             boiler_info: {
-                base_info: {
-                    type_designation: "Logano Plus SE625",
-                    list_price_net: `\$${100+getRandom(4000)}`,
-                    purchase_price_net: `\$${100+getRandom(4000)}`,
-                    purchase_date: getRandomDate(1998, 10),
-                    purchase_from: oneOf(fakeValueArrays.manufacturers),
-                    warranty_until: getRandomDate(2003, 15),
-                    installation_date: getRandomDate(2003, 10)
-                },
                 fuel_category: fuel_category,
                 boiler_type: oneOf(["Niedertemperatur", "Brennwert"]),
                 boiler_efficency: boiler_efficency,

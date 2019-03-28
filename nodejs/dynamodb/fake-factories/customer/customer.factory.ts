@@ -1,10 +1,17 @@
 import { Customer } from '../../models/customer/customer.interface';
-import { oneOf, getCurrentDateTimeLikeAws, getRandom, getRandomDate, getNewGuid } from '../factory.utils';
+import { oneOf, getCurrentDateTimeLikeAws, getRandom, getRandomDate, getNewGuid, oneOfYesNo } from '../factory.utils';
 import { fakeValueArrays } from '../fake-value.arrays';
 
-export function getNewCustomerItem(index:any): Customer {
-    const customer_type = "Company";
+    /**
+     ItemBase overrides
 
+    pk_id       = { customer_name }
+    sk          = { customer_id }
+    gsi_1_sk    = { customer_id }
+    gsi_2_sk:   = { customer_id}
+    */
+
+export function getNewCustomerItem(index:any): Customer {
     const name = oneOf(fakeValueArrays.names);
     const gender = fakeValueArrays.genders[fakeValueArrays.names.indexOf(name)];
     const title = fakeValueArrays.titles[fakeValueArrays.names.indexOf(name)];
@@ -12,20 +19,22 @@ export function getNewCustomerItem(index:any): Customer {
     const lastName = oneOf(fakeValueArrays.lastNames);
     const orgName = `XYZ-${index}`;
     const city = oneOf(fakeValueArrays.cities);
+    const customerId = `C-0001-1002-${index}`;
+    const customer_name = `${orgName} Ltd.`;
 
-    const hasRepresentative = index % 2 == 0;
+    const hasRepresentative = oneOfYesNo();
     
     let item = {
         item_id: getNewGuid(),
         item_timestamp: getCurrentDateTimeLikeAws(),
         // will be setup before db insert
-        pk_id: "",
-        sk: customer_type,
-        gsi_1_sk: customer_type,
-        gsi_2_sk: city,
-        item_type_debug: "Customer",
-        customer_id:	`C-0001-1002-${index}`,
-        customer_organization_name:	`${orgName} Ltd.`,
+        pk_id: customer_name,
+        sk: customerId,
+        gsi_1_sk: customerId,
+        gsi_2_sk: customerId,
+        item_type_debug: "customer",
+        customer_id:	customerId,
+        customer_name:	customer_name,
         customer_individual_name: "n/a",
         customer_quality_of_relationship: 1 + getRandom(4),
         customer_organization_homepage:	`www.${orgName.toLowerCase()}.com`,

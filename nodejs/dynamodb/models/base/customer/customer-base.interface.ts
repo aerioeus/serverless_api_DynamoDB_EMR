@@ -1,6 +1,6 @@
 export interface CustomerBase {
     customer_id: string,
-    customer_organization_name:	string,
+    customer_name:	string,
     customer_individual_name: string,
     customer_quality_of_relationship:number,
     customer_organization_homepage:	string,

@@ -7,16 +7,17 @@ export function getNewDnWaterStorageItems(start_index: number, dn: PodDistributi
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { water_storage_id }
-    gsi_1_sk    = { water_storage_info.storage_type }
-    gsi_2_sk:   = { water_storage_info.circuit_type}
+    pk_id       = { water_storage_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
         const water_storage_id = `WaterStorage_${i}`;
         const storage_type  = oneOf(["Speichersystem", "Speicherladesystem"]);
         const circuit_type = oneOf(["Reihenschaltung", "Parallelschaltung"]);
+        const component_type = "water_storage";
 
         const dbItem = {
             item_id: getNewGuid(),
@@ -25,23 +26,23 @@ export function getNewDnWaterStorageItems(start_index: number, dn: PodDistributi
             sk: water_storage_id,
             gsi_1_sk: storage_type ,
             gsi_2_sk: circuit_type,
-            item_type_debug: "WaterStorage",
+            item_type_debug: "water_storage",
 
             water_storage_id: water_storage_id,
-            water_storage_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            water_storage_serial_number: `2W${i}JK-2N`,
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `2W${i}JK-2N`,
+            component_base_info: {
+                type_designation: "HPS 300",
+                list_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_date: getRandomDate(1998, 10),
+                purchase_from: oneOf(fakeValueArrays.manufacturers),
+                warranty_until: getRandomDate(2003, 15),
+                installation_date: getRandomDate(2003, 10)
+            },
          
             water_storage_info: {
-                base_info: {
-                    type_designation: "HPS 300",
-                    list_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_date: getRandomDate(1998, 10),
-                    purchase_from: oneOf(fakeValueArrays.manufacturers),
-                    warranty_until: getRandomDate(2003, 15),
-                    installation_date: getRandomDate(2003, 10)
-                },
-                
                 storage_type: storage_type,
                 use_case: oneOf(["Trinkwasserbereitung", "Heizwasserbereitung"]),
                 statutory_temperature_specification: `${20 + getRandom(70)} °C`,

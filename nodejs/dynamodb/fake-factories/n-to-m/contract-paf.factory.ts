@@ -24,7 +24,7 @@ export function getContractPafItem (
         paf_index_3: pafItem.paf_index_3,
         paf_index_4: pafItem.paf_index_4,
         paf_index_5: pafItem.paf_index_5,
-        item_type_debug: isSupplier ? "ContractPaf(Supplier)" : "ContractPaf(Customer)"
+        item_type_debug: isSupplier ? "supplier_contract_paf" : "customer_contract_paf"
     };
 
     return item;

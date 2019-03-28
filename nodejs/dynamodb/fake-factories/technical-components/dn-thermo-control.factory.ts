@@ -4,14 +4,13 @@ import { fakeValueArrays } from "../fake-value.arrays";
 
 export function getNewDnThermoControlItems(start_index: number, dn: PodDistributionNetwork, childCount: number): ThermoControl[] {
     const dbItems = [];
-
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { thermo_control_id }
-    gsi_1_sk    = { thermo_control_info.thermostatic_temperature_control_type }
-    gsi_2_sk:   = { thermo_control_info.response_temperature}
+    pk_id       = { thermo_control_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -19,30 +18,32 @@ export function getNewDnThermoControlItems(start_index: number, dn: PodDistribut
         const thermostatic_temperature_control_type  = oneOf(["Temperaturregler (TR)", 
         "Sicherheitstemperaturwächter (STW)", "Sicherheitstemperaturbegrenzer (STB)"]);
         const response_temperature = `${1 + getRandom(4)} Bar`;
+        const component_type = "thermo_control";
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: thermo_control_id,
-            gsi_1_sk: thermostatic_temperature_control_type,
-            gsi_2_sk: response_temperature,
-            item_type_debug: "ThermoControl",
+            pk_id: thermo_control_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk: component_type,
+            gsi_2_sk: component_type,
+            item_type_debug: "thermo_control",
 
             thermo_control_id: thermo_control_id,
-            thermo_control_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            thermo_control_serial_number: `2W${i}JK-2F`,
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `2W${i}JK-2F`,
+            component_base_info: {
+                type_designation: "DDD123",
+                list_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_date: getRandomDate(1998, 10),
+                purchase_from: oneOf(fakeValueArrays.manufacturers),
+                warranty_until: getRandomDate(2003, 15),
+                installation_date: getRandomDate(2003, 10)
+            },
          
             thermo_control_info: {
-                base_info: {
-                    type_designation: "DDD123",
-                    list_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_date: getRandomDate(1998, 10),
-                    purchase_from: oneOf(fakeValueArrays.manufacturers),
-                    warranty_until: getRandomDate(2003, 15),
-                    installation_date: getRandomDate(2003, 10)
-                },
                 thermostatic_temperature_control_type: thermostatic_temperature_control_type,
                 response_temperature: response_temperature,
                 DN: `${20+getRandom(40)} DN`,

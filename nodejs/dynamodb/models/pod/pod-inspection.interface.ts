@@ -6,8 +6,8 @@ export interface PodInspection extends ItemBase {
 
     pk_id       = { pod_id }
     sk          = { inspection_id }
-    gsi_1_sk    = { inspection_company }
-    gsi_2_sk:   = { inspection_date }
+    gsi_1_sk    = { supplier_contract_id }
+    gsi_2_sk:   = { supplier_contract_id}
     */
    inspection_id: string,
    inspection_company: string,

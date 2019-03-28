@@ -16,6 +16,7 @@ export function getPafContractItem (
         gsi_1_sk: id ,
         gsi_2_sk: id ,
 
+        contract_product: contractItem.contract_product,
         contract_start_date: contractItem.contract_start_date,
         contract_valid_to: contractItem.contract_valid_to,
         contract_partner_type: contractItem.contract_partner_type,
@@ -26,7 +27,7 @@ export function getPafContractItem (
         contract_notice: contractItem.contract_notice,
         contract_consumption: contractItem.contract_consumption,
         contract_capacity: contractItem.contract_capacity,
-        item_type_debug: isSupplier ? "PafContract(Supplier)" : "PafContract(Customer)"
+        item_type_debug: isSupplier ? "paf_supplier_contract" : "paf_customer_contract"
         };
 
     if (isSupplier) {

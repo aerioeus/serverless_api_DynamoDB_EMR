@@ -1,23 +1,19 @@
-import { TechnicalComponentBase } from "./technical-component-base.interface";
-import { ItemBase } from "../base";
+import { TechnicalComponentBase } from "../base";
 
-export interface DistributionBlock extends ItemBase {
+export interface DistributionBlock extends TechnicalComponentBase {
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { distribution_block_id }
-    gsi_1_sk    = { distribution_block_info.type }
-    gsi_2_sk:   = { distribution_block_info.type}
+    pk_id       = { distribution_block_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     distribution_block_id: string,
-    distribution_block_manufacturer: string,
-    distribution_block_serial_number: string,
 
     distribution_block_info: {
-        base_info: TechnicalComponentBase,
+        comment: string,
         type: string,
-        comment: string
     }
 }

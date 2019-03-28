@@ -1,9 +1,18 @@
 import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate } from "../factory.utils";
-import { Pod, PodInspection } from "../../models";
+import { Pod, PodInspection, SupplierContract } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewPodInspectionItems(start_index: any, pod: Pod, childCount: number): PodInspection[] {
+export function getNewPodInspectionItems(start_index: any, pod: Pod, supplierContract: SupplierContract, childCount: number): PodInspection[] {
     const dbItems = [];
+
+    /**
+     ItemBase overrides
+
+    pk_id       = { pod_id }
+    sk          = { inspection_id }
+    gsi_1_sk    = { supplier_contract_id }
+    gsi_2_sk:   = { supplier_contract_id}
+    */
 
     for (let index = start_index; index < start_index + childCount; index++){
         const inspection_id = `Inspection_${index}`;
@@ -15,9 +24,9 @@ export function getNewPodInspectionItems(start_index: any, pod: Pod, childCount:
             item_timestamp: getCurrentDateTimeLikeAws(),
             pk_id: pod.pod_id,
             sk: inspection_id,
-            gsi_1_sk: inspection_company,
-            gsi_2_sk: inspection_date,
-            item_type_debug: "PodInspection",
+            gsi_1_sk: supplierContract.supply_contract_id,
+            gsi_2_sk: supplierContract.supply_contract_id,
+            item_type_debug: "pod_inspection",
             inspection_id: inspection_id,
             inspection_company: inspection_company,
             inspection_date: inspection_date,

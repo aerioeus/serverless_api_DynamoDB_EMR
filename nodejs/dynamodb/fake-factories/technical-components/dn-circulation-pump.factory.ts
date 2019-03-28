@@ -7,10 +7,10 @@ export function getNewDnCirculationPumpItems(start_index: number, dn: PodDistrib
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { circulation_pump_id }
-    gsi_1_sk    = { circulation_pump_info.control_type }
-    gsi_2_sk:   = { circulation_pump_info.user_case_pump}
+    pk_id       = { circulation_pump_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -18,22 +18,23 @@ export function getNewDnCirculationPumpItems(start_index: number, dn: PodDistrib
         const control_type  = oneOf(["auto", "delta_p-c konstant", "delta_p-c V-variabel", "delta_p-c T-aussentemperaturgeführte", "differenzdruckregeleung", "delta_p-c T-spreizungsgeführte"]);
         const user_case_pump = oneOf(["Kesselkreis", "Rücklaufanhebung", "Warmwasserspeicherladung", "Warmwasserspeicherladung-primär", 
         "Warmwasserspeicherladung-sekundär", "Solarspeicherladung-primär", "Solarspeicherladung-sekundär"]);
+        const component_type = "circulation_pump";
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: circulation_pump_id,
-            gsi_1_sk: control_type,
-            gsi_2_sk: user_case_pump,
-            item_type_debug: "CirculationPump",
+            pk_id: circulation_pump_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk: component_type,
+            gsi_2_sk: component_type,
+            item_type_debug: "circulation_pump",
 
             circulation_pump_id: circulation_pump_id,
-            circulation_pump_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            circulation_pump_serial_number: `RHQQ-W*34${i}/`,
-         
-            circulation_pump_info: {
-                base_info: {
+
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `RHQQ-W*34${i}/`,
+            component_base_info: {
                     type_designation: "Magna3",
                     list_price_net: `\$${1000+getRandom(4000)}`,
                     purchase_price_net: `\$${1000+getRandom(4000)}`,
@@ -42,7 +43,8 @@ export function getNewDnCirculationPumpItems(start_index: number, dn: PodDistrib
                     warranty_until: getRandomDate(2003, 15),
                     installation_date: getRandomDate(2003, 10)
                 },
-
+         
+            circulation_pump_info: {
                 interface_protocol: "Genibus",
                 analog_digital: "digital",
                 use_case_pump: user_case_pump,

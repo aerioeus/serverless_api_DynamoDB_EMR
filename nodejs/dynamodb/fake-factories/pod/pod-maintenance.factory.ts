@@ -1,9 +1,18 @@
 import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom, getRandomDate } from "../factory.utils";
-import { Pod, PodMaintenance } from "../../models";
+import { Pod, PodMaintenance, SupplierContract } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
-export function getNewPodMaintenanceItems(start_index: any, pod: Pod, childCount: number): PodMaintenance[] {
+export function getNewPodMaintenanceItems(start_index: any, pod: Pod, supplierContract: SupplierContract, childCount: number): PodMaintenance[] {
     const dbItems = [];
+
+    /**
+     ItemBase overrides
+
+    pk_id       = { pod_id }
+    sk          = { maintenance_id }
+    gsi_1_sk    = { supplier_contract_id }
+    gsi_2_sk:   = { supplier_contract_id }
+    */
 
     for (let i = start_index; i < start_index + childCount; i++) {
         const maintenance_id = `Maintenance_${i}`;
@@ -15,9 +24,9 @@ export function getNewPodMaintenanceItems(start_index: any, pod: Pod, childCount
             item_timestamp: getCurrentDateTimeLikeAws(),
             pk_id: pod.pod_id,
             sk: maintenance_id,
-            gsi_1_sk: maintenance_company,
-            gsi_2_sk: maintenance_date,
-            item_type_debug: "PodMaintenance",
+            gsi_1_sk: supplierContract.supply_contract_id,
+            gsi_2_sk: supplierContract.supply_contract_id,
+            item_type_debug: "pod_maintenance",
 
             maintainance_id: maintenance_id,
             maintainance_company: maintenance_company,

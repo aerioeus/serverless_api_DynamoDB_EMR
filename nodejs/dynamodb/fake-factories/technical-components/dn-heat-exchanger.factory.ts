@@ -8,40 +8,42 @@ export function getNewDnHeatExchangerItems(start_index: number, dn: PodDistribut
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { heat_exchanger_id }
-    gsi_1_sk    = { heat_exchanger_info.standard_capacity }
-    gsi_2_sk:   = { heat_exchanger_info.principle}
+    pk_id       = { heat_exchanger_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type}
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
         const heat_exchanger_id = `HeatExchanger_${i}`;
         const standard_capacity  = `${5 + getRandom(12)} kW`;
         const principle = oneOf(["analog", "digital"]);
+        const component_type = "heat_exchanger";
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: heat_exchanger_id,
-            gsi_1_sk: standard_capacity ,
-            gsi_2_sk: principle,
-            item_type_debug: "HeatExchanger",
+            pk_id: heat_exchanger_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk:  component_type,
+            gsi_2_sk:  component_type,
+            item_type_debug: "heat_exchanger",
 
             heat_exchanger_id: heat_exchanger_id,
-            heat_exchanger_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            heat_exchanger_serial_number: `2W${i}JK-2V`,
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `2W${i}JK-2V`,
+            component_base_info: {
+                type_designation: "Logalux LSP",
+                list_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_date: getRandomDate(1998, 10),
+                purchase_from: oneOf(fakeValueArrays.manufacturers),
+                warranty_until: getRandomDate(2003, 15),
+                installation_date: getRandomDate(2003, 10)
+            },
          
             heat_exchanger_info:{
-                base_info: {
-                    type_designation: "Logalux LSP",
-                    list_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_date: getRandomDate(1998, 10),
-                    purchase_from: oneOf(fakeValueArrays.manufacturers),
-                    warranty_until: getRandomDate(2003, 15),
-                    installation_date: getRandomDate(2003, 10)
-                },
                 model: "plate heat exchanger",
                 standard_capacity: standard_capacity,
                 primary_volume_flow_manufacturer_value: `${50+getRandom(50)} l`,

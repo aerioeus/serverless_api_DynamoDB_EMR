@@ -5,16 +5,16 @@ export interface Repair extends ItemBase {
      ItemBase overrides
 
     pk_id       = { repair_id }
-    sk          = { component_id }
-    gsi_1_sk    = { repair_id }
-    gsi_2_sk:   = { repair_id }
+    sk          = { invoice_id }
+    gsi_1_sk    = { component_id }
+    gsi_2_sk:   = { component_id }
     */
 
     repair_id: string,
     repair_contractor: string,
     repair_date: string,
     repair_invoice_number: string,
-    repair_invoice_position_number: string,
+    repair_invoice_position_number: number,
     repair_planned_repair_breakdown: string,
     repair_scope: string,
     repair_repaired_by: string,

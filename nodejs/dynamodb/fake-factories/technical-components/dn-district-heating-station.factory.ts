@@ -8,10 +8,10 @@ export function getNewDnDistrictHeatingStationItems(start_index: number, dn: Pod
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { district_heating_station_id }
-    gsi_1_sk    = { district_heating_station_info.principle }
-    gsi_2_sk:   = { district_heating_station_info.capacity}
+    pk_id       = { district_heating_station_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -19,30 +19,32 @@ export function getNewDnDistrictHeatingStationItems(start_index: number, dn: Pod
         const principle = oneOf(["druckbehaftet", "drucklos", "ohne Hauptpumpe (Saugverteiler)", "mit Hauptpumpe (Druckverteiler)", 
         "mit Hauptpumpe und drucklosen", "Verteiler hydraulische Weiche"]);
         const capacity = `${200 + getRandom(300)} kW`;
+        const component_type = "district_heating_station";
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: district_heating_station_id,
-            gsi_1_sk: principle,
-            gsi_2_sk: capacity,
-            item_type_debug: "DistrictHeatingStation",
+            pk_id: district_heating_station_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk: component_type,
+            gsi_2_sk: component_type,
+            item_type_debug: "district_heating_station",
 
             district_heating_station_id: district_heating_station_id,
-            district_heating_station_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            district_heating_station_serial_number: `2W${i}JK-2C`,
+            component_type:component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `2W${i}JK-2C`,
+            component_base_info: {
+                type_designation: "None",
+                list_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_date: getRandomDate(1998, 10),
+                purchase_from: oneOf(fakeValueArrays.manufacturers),
+                warranty_until: getRandomDate(2003, 15),
+                installation_date: getRandomDate(2003, 10)
+            },
         
             district_heating_station_info: {
-                base_info: {
-                    type_designation: "None",
-                    list_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_date: getRandomDate(1998, 10),
-                    purchase_from: oneOf(fakeValueArrays.manufacturers),
-                    warranty_until: getRandomDate(2003, 15),
-                    installation_date: getRandomDate(2003, 10)
-                },
                 principle: principle,
                 flow_temperature: `${getRandom(120)}°C`,
                 return_temperature: `${getRandom(60)}°C`,

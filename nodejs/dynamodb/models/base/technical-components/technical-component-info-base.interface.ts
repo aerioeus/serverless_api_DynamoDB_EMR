@@ -1,4 +1,4 @@
-export interface TechnicalComponentBase {
+export interface TechnicalComponentInfoBase {
     type_designation: string,
     list_price_net: string,
     purchase_price_net: string,

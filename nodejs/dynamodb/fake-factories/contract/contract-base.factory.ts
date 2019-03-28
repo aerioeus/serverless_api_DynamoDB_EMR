@@ -1,4 +1,4 @@
-import { getRandom, getRandomDate, oneOf, getCurrentDateTimeLikeAws, getNewGuid } from "../factory.utils";
+import { getRandom, getRandomDate, oneOf, oneOfYesNo } from "../factory.utils";
 import moment from "moment";
 import { fakeValueArrays } from '../fake-value.arrays';
 import { ContractBase, ContractSigner } from "../../models/base";
@@ -8,15 +8,14 @@ export function getNewContractItem(index: any, signer: ContractSigner, isSupplie
     const contract_start_date = getRandomDate(2014, 2);
     const contract_valid_to = moment(contract_start_date).add(contract_period, "months").add(-1, "days").format('MM/DD/YYYY');
     const contract_partner_type = isSupplier ? "Supplier" : "Customer";
-    const customer_contract_id = `ENN-000${index}`;
 
     let item = {
-        customer_contract_id: customer_contract_id,
         contract_start_date: contract_start_date,
         contract_valid_to: contract_valid_to,
         contract_partner_type: contract_partner_type,
         contract_product_category_type: oneOf(fakeValueArrays.product_category_types),
-        contract_terminated: index % 2 == 0 ? 'no' : 'yes',
+        contract_terminated: oneOfYesNo(),
+        contract_product: isSupplier ? oneOf(fakeValueArrays.supplier_contract_products) : oneOf(fakeValueArrays.customer_contract_products),
         contract_info: {
             signed_on: getRandomDate(2000, 10),
             signed_by: `${signer.first_name} ${signer.last_name}, ${signer.organization_name}, ${signer.address_place}`,

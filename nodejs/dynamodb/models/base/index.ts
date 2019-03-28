@@ -10,3 +10,5 @@ export * from './contract/contract-base.interface';
 export * from './building/building-base.interface';
 export * from './building/building-entrance-base.interface';
 export * from './paf/paf-base.interface';
+export * from './technical-components/technical-component-base.interface';
+export * from './technical-components/technical-component-info-base.interface';

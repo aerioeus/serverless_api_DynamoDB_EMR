@@ -5,7 +5,7 @@ export interface PriceAdjustmentFormula extends ItemBase, PriceAdjustmentFormula
      ItemBase overrides
 
     pk_id       = { paf_id }
-    sk          = { paf_type = "Paf" }
+    sk          = { paf_id }
     gsi_1_sk    = { paf_id }
     gsi_2_sk:   = { paf_id }
     */

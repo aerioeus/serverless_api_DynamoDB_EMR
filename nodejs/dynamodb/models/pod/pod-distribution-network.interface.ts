@@ -4,10 +4,10 @@ export interface PodDistributionNetwork extends ItemBase {
     /**
      ItemBase overrides
 
-    pk_id       = { pod_id }
-    sk          = { distribution_network_id }
-    gsi_1_sk    = { distribution_network_hydraulic_circuite_type }
-    gsi_2_sk:   = { distribution_network_type }
+    pk_id       = { distribution_network_id }
+    sk          = { pod_id }
+    gsi_1_sk    = { distribution_network_id }
+    gsi_2_sk:   = { distribution_network_id }
     */
    distribution_network_id: string,
    distribution_network_type: string,

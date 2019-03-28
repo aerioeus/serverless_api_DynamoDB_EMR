@@ -5,6 +5,14 @@ import { fakeValueArrays } from "../fake-value.arrays";
 export function getNewPodDistributionNetworkItems(start_index: any, pod: Pod, childCount: number): PodDistributionNetwork[] {
     const dbItems = [];
 
+    /**
+     ItemBase overrides
+
+    pk_id       = { distribution_network_id }
+    sk          = { pod_id }
+    gsi_1_sk    = { distribution_network_id }
+    gsi_2_sk:   = { distribution_network_id }
+    */
     for (let i = start_index; i < start_index + childCount; i++){
         const distribution_network_id = `DN_${i}`;
         const hydraulic_circuite_type = oneOf(fakeValueArrays.hydraulic_circuite_types);
@@ -13,11 +21,11 @@ export function getNewPodDistributionNetworkItems(start_index: any, pod: Pod, ch
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: pod.pod_id,
-            sk: distribution_network_id,
-            gsi_1_sk: hydraulic_circuite_type,
-            gsi_2_sk: distribution_network_type,
-            item_type_debug: "PodDistributionNetwork",
+            pk_id: distribution_network_id,
+            sk: pod.pod_id,
+            gsi_1_sk: distribution_network_id,
+            gsi_2_sk: distribution_network_id,
+            item_type_debug: "distribution_network",
 
             distribution_network_id: distribution_network_id,
             distribution_network_type: distribution_network_type,

@@ -1,4 +1,4 @@
-import { ItemBase, PriceAdjustmentFormulaBase } from "../base/";
+import { ItemBase, PriceAdjustmentFormulaBase } from "../base";
 
 export interface ContractPriceAdjustmentFormula extends ItemBase, PriceAdjustmentFormulaBase {
     /**

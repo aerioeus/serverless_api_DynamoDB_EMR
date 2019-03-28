@@ -2,6 +2,15 @@ import { PriceAdjustmentFormula } from "../../models";
 import { getCurrentDateTimeLikeAws, oneOf, getRandomFloat, getRandom, getNewGuid } from "../factory.utils";
 import { fakeValueArrays } from '../fake-value.arrays';
 
+    /**
+     ItemBase overrides
+
+    pk_id       = { paf_id }
+    sk          = { paf_id }
+    gsi_1_sk    = { paf_id }
+    gsi_2_sk:   = { paf_id }
+    */
+
 export function getNewPafItem(index:any): PriceAdjustmentFormula {
 
     const paf_id = `PAF-${index}`;
@@ -10,11 +19,11 @@ export function getNewPafItem(index:any): PriceAdjustmentFormula {
         item_id: getNewGuid(),
         item_timestamp: getCurrentDateTimeLikeAws(),
         pk_id: paf_id,
-        sk: "Paf",
+        sk: paf_id,
         gsi_1_sk: paf_id,
         gsi_2_sk: paf_id,
         paf_id: paf_id,
-        item_type_debug: "PAF",
+        item_type_debug: "paf",
         paf_name: `Formula ${index}`,
         paf_text: "AP = APo*(0,2 + 0,8*HEL/HELo)",
         paf_description: "AP: working price energicos",

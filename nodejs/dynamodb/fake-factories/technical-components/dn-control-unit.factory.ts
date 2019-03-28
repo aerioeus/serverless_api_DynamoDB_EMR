@@ -8,33 +8,33 @@ export function getNewDnControlUnitItems(start_index: number, dn: PodDistributio
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { control_unit_id }
-    gsi_1_sk    = { control_unit_info.operation_mode }
-    gsi_2_sk:   = { control_unit_info.analog_digital}
+    pk_id       = { control_unit_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
-
 
     for (let i = start_index; i < start_index + childCount; i++){
         const control_unit_id = `ControlUnit_${i}`;
         const operation_mode  = oneOf(["Tag", "Nacht", "Auto", "kein Programm"]);
         const analog_digital = oneOf(["analog", "digital"]);
+        const component_type = "control_unit";
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: control_unit_id,
-            gsi_1_sk: operation_mode ,
-            gsi_2_sk: analog_digital,
-            item_type_debug: "ControlUnit",
+            pk_id: control_unit_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk: component_type,
+            gsi_2_sk: component_type,
+            item_type_debug: "control_unit",
 
             control_unit_id: control_unit_id,
-            control_unit_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            control_unit_serial_number: `2W${i}JK-2A`,
-        
-            control_unit_info: {
-                base_info: {
+
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `2W${i}JK-2A`,
+            component_base_info: {
                     type_designation: "R4311",
                     list_price_net: `\$${1000+getRandom(2000)}`,
                     purchase_price_net: `\$${1000+getRandom(2000)}`,
@@ -43,6 +43,8 @@ export function getNewDnControlUnitItems(start_index: number, dn: PodDistributio
                     warranty_until: getRandomDate(2003, 15),
                     installation_date: getRandomDate(2003, 10)
                 },
+        
+            control_unit_info: {
                 operation_mode: operation_mode,
                 interface_protocol: "unknown",
                 analog_digital: analog_digital,

@@ -1,24 +1,20 @@
-import { TechnicalComponentBase } from "./technical-component-base.interface";
-import { ItemBase } from "../base";
+import { TechnicalComponentBase } from "../base";
 
-export interface Boiler extends ItemBase {
+export interface Boiler extends TechnicalComponentBase {
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { boiler_id }
-    gsi_1_sk    = { boiler_info.fuel_category }
-    gsi_2_sk:   = { boiler_info.efficency }
+    pk_id       = { boiler_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
-    boiler_id: string,
-    boiler_manufacturer: string,
-    boiler_serial_number: string,   
+    boiler_id: string, 
 
     boiler_info: {
-        base_info: TechnicalComponentBase,
-        fuel_category: string,
         boiler_type: string,
+        fuel_category: string,
         boiler_efficency: string,
         interface_protocol: string,
         burner_intern: string,

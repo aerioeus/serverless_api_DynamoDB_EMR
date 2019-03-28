@@ -2,6 +2,15 @@ import { oneOf, getCurrentDateTimeLikeAws, getRandom, getRandomDate, getNewGuid 
 import { fakeValueArrays } from '../fake-value.arrays';
 import { Supplier } from '../../models/supplier/supplier.interface';
 
+    /**
+     ItemBase overrides
+
+    pk_id       = { supplier_name }
+    sk          = { supplier_id }
+    gsi_1_sk    = { supplier_id }
+    gsi_2_sk:   = { supplier_id }
+    */
+
 export function getNewSupplierItem(index:any): Supplier {
     const supplier_type = "Company";
 
@@ -13,17 +22,18 @@ export function getNewSupplierItem(index:any): Supplier {
     const orgName = `ABC-${index}`;
     const city = oneOf(fakeValueArrays.cities);
     const industry = oneOf(fakeValueArrays.industry_sectors);
+    const supplier_id = `S-9979${index}`;
     
     const item = {
         item_id: getNewGuid(),
         item_timestamp: getCurrentDateTimeLikeAws(),
         // will be setup before db insert
-        pk_id: "",
-        sk: supplier_type,
-        gsi_1_sk: supplier_type,
-        gsi_2_sk: city,
-        item_type_debug: "Supplier",
-        supplier_id:	`S-9979${index}`,
+        pk_id: orgName,
+        sk: supplier_id,
+        gsi_1_sk: supplier_id,
+        gsi_2_sk: supplier_id,
+        item_type_debug: "supplier",
+        supplier_id:	supplier_id,
         supplier_type: supplier_type,
         supplier_industry_sector: industry,
         supplier_name: orgName,

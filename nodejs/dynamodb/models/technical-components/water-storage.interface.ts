@@ -1,24 +1,19 @@
-import { TechnicalComponentBase } from "./technical-component-base.interface";
-import { ItemBase } from "../base";
+import { TechnicalComponentBase } from "../base";
 
-export interface WaterStorage extends ItemBase {
+export interface WaterStorage extends TechnicalComponentBase {
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { water_storage_id }
-    gsi_1_sk    = { water_storage_info.storage_type }
-    gsi_2_sk:   = { water_storage_info.circuit_type}
+    pk_id       = { water_storage_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
 
     water_storage_id: string,
-    water_storage_manufacturer: string,
-    water_storage_serial_number: string,
 
-    water_storage_info: {
-        base_info: TechnicalComponentBase,
-        
-        storage_type: string,
+    water_storage_info: {     
+        storage_type: string, 
         use_case: string,
         statutory_temperature_specification: string,
         leading_storage: string,

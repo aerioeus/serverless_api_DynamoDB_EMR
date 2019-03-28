@@ -9,40 +9,41 @@ export function getNewDnExpansionTankItems(start_index: number, dn: PodDistribut
     /**
      ItemBase overrides
 
-    pk_id       = { distribution_network_id }
-    sk          = { expansion_tank_id }
-    gsi_1_sk    = { expansion_tank_info.volume }
-    gsi_2_sk:   = { expansion_tank_info.type}
+    pk_id       = { expansion_tank_id }
+    sk          = { distribution_network_id }
+    gsi_1_sk    = { component_type }
+    gsi_2_sk:   = { component_type }
     */
-
     for (let i = start_index; i < start_index + childCount; i++){
         const expansion_tank_id = `ExpansionTank_${i}`;
         const volume  = getRandom(500).toString();
         const type = oneOf(["MAG", "Pumpen Druckhaltung", "Kompressordruckhaltung"]);
+        const component_type = "expansion_tank";
 
         const dbItem = {
             item_id: getNewGuid(),
             item_timestamp: getCurrentDateTimeLikeAws(),
-            pk_id: dn.distribution_network_id,
-            sk: expansion_tank_id,
-            gsi_1_sk: volume ,
-            gsi_2_sk: type,
-            item_type_debug: "ControlUnit",
+            pk_id: expansion_tank_id,
+            sk: dn.distribution_network_id,
+            gsi_1_sk: component_type,
+            gsi_2_sk: component_type,
+            item_type_debug: "expansion_tank",
 
             expansion_tank_id: expansion_tank_id,
-            expansion_tank_manufacturer: oneOf(fakeValueArrays.manufacturers),
-            expansion_tank_serial_number: `2W${i}JK-2Y`,
+            component_type: component_type,
+            component_manufacturer: oneOf(fakeValueArrays.manufacturers),
+            component_serial_number: `2W${i}JK-2Y`,
+            component_base_info: {
+                type_designation: "N400",
+                list_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_price_net: `\$${1000+getRandom(2000)}`,
+                purchase_date: getRandomDate(1998, 10),
+                purchase_from: oneOf(fakeValueArrays.manufacturers),
+                warranty_until: getRandomDate(2003, 15),
+                installation_date: getRandomDate(2003, 10)
+            },
          
             expansion_tank_info: {
-                base_info: {
-                    type_designation: "N400",
-                    list_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_price_net: `\$${1000+getRandom(2000)}`,
-                    purchase_date: getRandomDate(1998, 10),
-                    purchase_from: oneOf(fakeValueArrays.manufacturers),
-                    warranty_until: getRandomDate(2003, 15),
-                    installation_date: getRandomDate(2003, 10)
-                },
                 volume: volume,
                 system_pressure: `${getRandomFloat(3)} Bar`,
                 type: type,

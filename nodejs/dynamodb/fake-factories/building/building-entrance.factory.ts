@@ -2,6 +2,15 @@ import { getCurrentDateTimeLikeAws, getNewGuid, oneOf, getRandom } from "../fact
 import { Building, BuildingEntrance } from "../../models";
 import { fakeValueArrays } from "../fake-value.arrays";
 
+    /**
+     ItemBase overrides
+
+    pk_id       = { building_id }
+    sk          = { entrance_id }
+    gsi_1_sk    = { entrance_id }
+    gsi_2_sk:   = { entrance_id }
+    */
+
 export function getNewBuildingEntranceItems(start_Index: any, building: Building, childCount: number): BuildingEntrance[] {
     const dbItems = [];
 
@@ -15,9 +24,9 @@ export function getNewBuildingEntranceItems(start_Index: any, building: Building
             item_timestamp: getCurrentDateTimeLikeAws(),
             pk_id: building.building_id,
             sk: entrance_id,
-            gsi_1_sk: entrance_street,
-            gsi_2_sk: entrance_place,
-            item_type_debug: "BuildingEntrance",
+            gsi_1_sk: entrance_id,
+            gsi_2_sk: entrance_id,
+            item_type_debug: "building_entrance",
             entrance_id: entrance_id,
             entrance_description: `Description of entrance #${entrance_id}`,
             entrance_street: entrance_street,
