@@ -118,17 +118,7 @@ call aws cloudformation wait stack-create-complete --stack-name dynamodb-stack
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
 @echo "Fill table with fake data"
-call node -e 'require(\"./nodejs/dist/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 20)'
-
-@echo off
-REM -------------------------------------------------------------------------------------------------------------------------------------------------
-
-REM @echo "Create lambda-stack. It creates the Lambda functions " 
-REM call aws cloudformation create-stack --stack-name lambda-stack --template-body file://lambda-stack/templates/lambda.yaml --output text --capabilities CAPABILITY_IAM --parameters ParameterKey=NodeJsZipKey,ParameterValue=%ZipPathTimeStamp%/nodejs.zip
-
-REM @echo "Create lambda-stack. WAITING ..." 
-REM call aws cloudformation wait stack-create-complete --stack-name lambda-stack
-REM @echo "Create lambda-stack. DONE" 
+call node -e "require('./nodejs/dist/dynamodb/dynamodb.module').fillDynamoDbTable(200, 20)"
 
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
