@@ -32,12 +32,12 @@ call aws cloudformation wait stack-create-complete --stack-name iam-s3-policy-st
 @echo off 
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
-@echo "Create s3-stack. It creates s3 bucket for the scripts and js code" 
-call aws cloudformation create-stack --stack-name s3-stack --template-body file://s3-stack/templates/s3.yaml --output text --parameters file://s3-stack/s3.stack.parameters.json
+REM @echo "Create s3-stack. It creates s3 bucket for the scripts and js code" 
+REM call aws cloudformation create-stack --stack-name s3-stack --template-body file://s3-stack/templates/s3.yaml --output text --parameters file://s3-stack/s3.stack.parameters.json
 
-@echo "Create s3-stack. WAITING ..." 
-call aws cloudformation wait stack-create-complete --stack-name s3-stack
-@echo "Create s3-stack. DONE" 
+REM @echo "Create s3-stack. WAITING ..." 
+REM call aws cloudformation wait stack-create-complete --stack-name s3-stack
+REM @echo "Create s3-stack. DONE" 
 
 @echo "Retrieve the s3 bucket name 
 
@@ -50,9 +50,9 @@ for /f "usebackq" %%A in (`%command%`) do set "S3BucketName=%%A"
 @echo off 
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
-@echo "Deploy all the template scripts to s3 bucket" 
-call aws s3 sync . s3://%S3BucketName%/yaml  --exclude "*" --include "*.yaml"
-@echo "Deploy all the template scripts to s3 bucket. DONE" 
+REM @echo "Deploy all the template scripts to s3 bucket" 
+REM call aws s3 sync . s3://%S3BucketName%/yaml  --exclude "*" --include "*.yaml"
+REM @echo "Deploy all the template scripts to s3 bucket. DONE" 
 
 @echo off 
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,17 +118,7 @@ call aws cloudformation wait stack-create-complete --stack-name dynamodb-stack
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
 @echo "Fill table with fake data"
-call node -e 'require(\"./nodejs/dist/dynamodb/dynamodb.module\").fillDynamoDbTable(200, 20)'
-
-@echo off
-REM -------------------------------------------------------------------------------------------------------------------------------------------------
-
-REM @echo "Create lambda-stack. It creates the Lambda functions " 
-REM call aws cloudformation create-stack --stack-name lambda-stack --template-body file://lambda-stack/templates/lambda.yaml --output text --capabilities CAPABILITY_IAM --parameters ParameterKey=NodeJsZipKey,ParameterValue=%ZipPathTimeStamp%/nodejs.zip
-
-REM @echo "Create lambda-stack. WAITING ..." 
-REM call aws cloudformation wait stack-create-complete --stack-name lambda-stack
-REM @echo "Create lambda-stack. DONE" 
+call node -e "require('./nodejs/dist/dynamodb/dynamodb.module').fillDynamoDbTable(200, 20)"
 
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
