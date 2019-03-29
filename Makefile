@@ -43,6 +43,22 @@ create_masterstack:
 	aws cloudformation wait stack-create-complete --stack-name $(stack_name)
 
 create_s3_stack:
+	aws cloudformation create-stack --stack-name iam-role-policy-stack \
+	--template-body file://iam-stack/templates/iam.role-policy.yaml \
+	--capabilities CAPABILITY_IAM \
+	--output text \
+	--parameters file://iam-stack/iam.stack.parameters.json
+
+	aws cloudformation wait stack-create-complete --stack-name iam-role-policy-stack
+
+	aws cloudformation create-stack --stack-name iam-s3-policy-stack \
+	--template-body file://iam-stack/templates/iam.s3-policy.yaml \
+	--capabilities CAPABILITY_IAM \
+	--output text \
+	--parameters file://iam-stack/iam.stack.parameters.json
+
+	aws cloudformation wait stack-create-complete --stack-name iam-s3-policy-stack
+
 	make create_stack stack_name=s3-stack file_name=s3
 
 create_iam_stack:
