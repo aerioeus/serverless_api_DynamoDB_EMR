@@ -15,7 +15,6 @@ help: ## This help.
 .DEFAULT_GOAL := help
 REGION=us-east-1
 TEMPLATES_BUCKET=618326157558-dynamodbtest-bucket
-CURR_TIME=$(shell date +%F_%H-%M-%S)
 
 create_stack:
 	aws cloudformation validate-template \
@@ -52,10 +51,6 @@ create_iam_stack:
 create_dynamodb_stack:
 	make create_masterstack stack_name=dynamodb-stack file_name=dynamodb
 
-build_lambda_code:
-	echo "Build the .ts files into .js files"
-	cd ./nodejs && npm i && tsc
-
 create_dynamodb_stack:
 	make create_stack stack_name=dynamodb-stack file_name=dynamodb
 
@@ -63,17 +58,26 @@ create_populate_tables:
 	echo "Fill table with fake data"
 	node -e 'require("./nodejs/dist/dynamodb/dynamodb.module").fillDynamoDbTable(200, 20)'
 
+build_lambda_code:
+	echo "Build the .ts files into .js files"
+	cd ./nodejs && npm i && tsc
+
 create_cognitoidp_stack:
-	zip -qr ./nodejs.zip ./nodejs/dist/
+	cd ./nodejs && npm install --production
+	cp -R  ./nodejs/node_modules/ ./nodejs/dist/node_modules/
+
+	cd ./nodejs && zip -qr ./nodejs.zip ./dist/
+	cp ./nodejs/nodejs.zip .
+
 	echo "Deploy the node zip to s3 bucket. Use timestamp to mark the latest code archive"
 	aws s3 cp ./nodejs.zip s3://$(TEMPLATES_BUCKET)/node/nodejs.zip
 
 	make create_stack stack_name=cognito-stack file_name=cognito
 
 create_stacks:
-	# make create_s3_stack
-	# make create_iam_stack
-	# make build_lambda_code
-	# make create_dynamodb_stack
-	# make create_populate_tables
+	make create_s3_stack
+	make create_iam_stack
+	make create_dynamodb_stack
+	make create_populate_tables
+	make build_lambda_code
 	make create_cognitoidp_stack
