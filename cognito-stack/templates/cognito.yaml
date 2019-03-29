@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   AWS Template for creating cognito user pool
-  
+
 Parameters:
   UserPoolName:
     Type: String
@@ -32,12 +32,12 @@ Resources:
   EncUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      AdminCreateUserConfig: 
+      AdminCreateUserConfig:
         AllowAdminCreateUserOnly: true
       UserPoolName: !Ref UserPoolName
-      UsernameAttributes: 
+      UsernameAttributes:
         - email
-      AutoVerifiedAttributes: 
+      AutoVerifiedAttributes:
         - email
       Schema:
         - Name: name
@@ -54,18 +54,18 @@ Resources:
     Properties:
         ClientName: !Ref AppClientName
         GenerateSecret: false
-        UserPoolId: !Ref EncUserPool   
+        UserPoolId: !Ref EncUserPool
 
   LambdaCognitoExecutionRole:
     Type: AWS::IAM::Role
-    Properties: 
+    Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               Service: lambda.amazonaws.com
-            Action: 
+            Action:
               - sts:AssumeRole
       Path: /
       Policies:
@@ -89,52 +89,52 @@ Resources:
                 Resource:
                   - "arn:aws:cognito-idp:*:*:*"
 
-  CustomDomainLambda:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: domainCustomCreatorLbFunc
-      Code:
-        S3Bucket:
-          Fn::ImportValue: s3-TemplateBucketName
-        S3Key: !Ref NodeJsZipKey
-      Handler: index.setupCognitoStack
-      Role:
-        Fn::GetAtt: 
-          - LambdaCognitoExecutionRole
-          - Arn
-      Runtime: nodejs8.10
-      Timeout: 180
+  # CustomDomainLambda:
+  #   Type: AWS::Lambda::Function
+  #   Properties:
+  #     FunctionName: domainCustomCreatorLbFunc
+  #     Code:
+  #       S3Bucket:
+  #         Fn::ImportValue: s3-TemplateBucketName
+  #       S3Key: !Ref NodeJsZipKey
+  #     Handler: index.setupCognitoStack
+  #     Role:
+  #       Fn::GetAtt:
+  #         - LambdaCognitoExecutionRole
+  #         - Arn
+  #     Runtime: nodejs8.10
+  #     Timeout: 180
 
-  CustomDomainCreator:
-    Type: Custom::CustomDomainCreatorFunction
-    Properties:
-      ServiceToken: !GetAtt CustomDomainLambda.Arn
-      UserPoolId: !Ref EncUserPool
-      DomainName: !Ref SubDomainName
-      GenerateRandomIfNotAvailable: !Ref SubDomainName
-      CallbackUrls: !Ref CallbackUrls
-      AppClientId: !Ref AppClient
-      TestUserEmail: !Ref TestUserEmail
-      TestUserName: !Ref TestUserName
-      TestUserTempPassword: !Ref TestUserTempPassword
-      # CertificateArn:
-      #   Fn::ImportValue: !Sub ${EnvironmentName}-DNSCertificateARN3
+  # CustomDomainCreator:
+  #   Type: Custom::CustomDomainCreatorFunction
+  #   Properties:
+  #     ServiceToken: !GetAtt CustomDomainLambda.Arn
+  #     UserPoolId: !Ref EncUserPool
+  #     DomainName: !Ref SubDomainName
+  #     GenerateRandomIfNotAvailable: !Ref SubDomainName
+  #     CallbackUrls: !Ref CallbackUrls
+  #     AppClientId: !Ref AppClient
+  #     TestUserEmail: !Ref TestUserEmail
+  #     TestUserName: !Ref TestUserName
+  #     TestUserTempPassword: !Ref TestUserTempPassword
+  #     # CertificateArn:
+  #     #   Fn::ImportValue: !Sub ${EnvironmentName}-DNSCertificateARN3
 Outputs:
   UserPoolId:
     Value: !Ref EncUserPool
     Description: ID of the created User Pool
   UserPoolProviderName:
-    Value: !GetAtt 
+    Value: !GetAtt
           - EncUserPool
           - ProviderName
     Description: Provider Name of the created User Pool
   UserPoolProviderURL:
-    Value: !GetAtt 
+    Value: !GetAtt
           - EncUserPool
           - ProviderURL
     Description: Provider URL of the created User Pool
   UserPoolArn:
-    Value: !GetAtt 
+    Value: !GetAtt
           - EncUserPool
           - Arn
     Description: Name of the created User Pool
