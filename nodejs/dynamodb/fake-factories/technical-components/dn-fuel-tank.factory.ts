@@ -10,7 +10,11 @@ export function getNewDnFuelTankItems(start_index: number, dn: PodDistributionNe
     pk_id       = { fuel_tank_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
+
+    gsi_2_pk:   = { component_type }
     gsi_2_sk:   = { component_type }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -25,7 +29,12 @@ export function getNewDnFuelTankItems(start_index: number, dn: PodDistributionNe
             pk_id: fuel_tank_id,
             sk: dn.distribution_network_id,
             gsi_1_sk: component_type,
+
+            gsi_2_pk: component_type,
             gsi_2_sk: component_type,
+            gsi_3_pk: component_type,
+            gsi_3_sk: component_type,
+            
             item_type_debug: "fuel-tank",
 
             fuel_tank_id: fuel_tank_id,

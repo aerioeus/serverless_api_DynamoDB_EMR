@@ -72,34 +72,31 @@ REM ----------------------------------------------------------------------------
 @echo "Go to nodejs folder" 
 cd nodejs
 
+@echo "Delete .zip archive if it exists" 
+del nodejs.zip
+
+@echo "Delete ./dist folder if it exists" 
+Remove-Item "./dist" -recurse
+
 @echo "Install npm dependencies" 
 call npm i
 
 @echo "Build the .ts files into .js files" 
 call tsc
 
-REM @echo "Delete .zip archive if it exists" 
-REM del nodejs.zip
+@echo "Copy node_modules folder into dist" 
+robocopy ./node_modules ./dist/node_modules /E
 
-REM @echo "Create the zip archive of nodejs folder(requires powershell)" 
-REM 7z a -tzip  nodejs.zip .\*
+@echo "Create the zip archive of nodejs folder(requires powershell)" 
+7z a -tzip  nodejs.zip .\*
 
-REM @echo off
-
-REM @echo Retreive timestamp
-
-REM for /f "delims=" %%a in ('wmic OS Get localdatetime ^| find "."') do set DateTime=%%a
-
-REM set ZipPathTimeStamp=node/%DateTime:~0,14%
-
-REM @echo PathWithTimeStamp=%ZipPathTimeStamp%
-
-REM @echo "Deploy the node zip to s3 bucket. Use timestamp to mark the latest code archive"
+@echo off
+@echo "Deploy the node zip to s3 bucket. Use timestamp to mark the latest code archive"
  
-REM call aws s3 sync . s3://%S3BucketName%/%ZipPathTimeStamp%  --exclude "*" --include "*.zip"
+call aws s3 sync . s3://%S3BucketName%/node  --exclude "*" --include "*.zip"
 
-REM @echo "Delete .zip archive"
-REM del nodejs.zip
+@echo "Delete .zip archive"
+del nodejs.zip
 
 @echo "Return to the root folder"
 cd ..
@@ -118,28 +115,13 @@ call aws cloudformation wait stack-create-complete --stack-name dynamodb-stack
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
 @echo "Fill table with fake data"
-call node -e "require('./nodejs/dist/dynamodb/dynamodb.module').fillDynamoDbTable(200, 20)"
+call node -e "require('./nodejs/dist/dynamodb/dynamodb.module').fillDynamoDbTable(200, 10)"
 
 @echo off
 REM -------------------------------------------------------------------------------------------------------------------------------------------------
 
-REM Replace the 'ZipPathTimeStamp' with the value of '%ZipPathTimeStamp%' and write result into the new file
-@echo off &setlocal
-set "search=ZipPathTimeStamp"
-set "replace=%ZipPathTimeStamp%"
-set "textfile=cognito-stack/cognito.stack.parameters.json"
-set "newfile=cognito-stack/cognito.stack.parameters.tmp.json"
-(for /f "delims=" %%i in (%textfile%) do (
-    set "line=%%i"
-    setlocal enabledelayedexpansion
-    set "line=!line:%search%=%replace%!"
-    echo(!line!
-    endlocal
-))>"%newfile%"
-
-
 @echo "Create cognito-stack. It creates Cognito infrastructure"
-call aws cloudformation create-stack --stack-name cognito-stack --template-body file://cognito-stack/templates/cognito.yaml --output text --capabilities CAPABILITY_IAM --parameters file://cognito-stack/cognito.stack.parameters.tmp.json 
+call aws cloudformation create-stack --stack-name cognito-stack --template-body file://cognito-stack/templates/cognito.yaml --output text --capabilities CAPABILITY_IAM --parameters file://cognito-stack/cognito.stack.parameters.json 
 
 @echo "Create cognito-stack. WAITING ..." 
 call aws cloudformation wait stack-create-complete --stack-name cognito-stack

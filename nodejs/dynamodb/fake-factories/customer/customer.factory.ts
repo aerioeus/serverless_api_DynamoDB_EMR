@@ -7,8 +7,12 @@ import { fakeValueArrays } from '../fake-value.arrays';
 
     pk_id       = { customer_name }
     sk          = { customer_id }
-    gsi_1_sk    = { customer_id }
-    gsi_2_sk:   = { customer_id}
+    gsi_1_sk    = { customer_place }
+
+    gsi_2_pk:   = { customer_id }
+    gsi_2_sk:   = { representative_appointed }
+    gsi_3_pk:   = { customer_id}
+    gsi_3_sk:   = { customer_id}
     */
 
 export function getNewCustomerItem(index:any): Customer {
@@ -30,8 +34,13 @@ export function getNewCustomerItem(index:any): Customer {
         // will be setup before db insert
         pk_id: customer_name,
         sk: customerId,
-        gsi_1_sk: customerId,
-        gsi_2_sk: customerId,
+        gsi_1_sk: city,
+
+        gsi_2_pk: customerId,
+        gsi_2_sk: hasRepresentative,
+        gsi_3_pk: customerId,
+        gsi_3_sk: customerId,
+
         item_type_debug: "customer",
         customer_id:	customerId,
         customer_name:	customer_name,

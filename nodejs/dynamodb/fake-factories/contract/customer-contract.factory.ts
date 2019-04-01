@@ -10,7 +10,10 @@ export function getNewCustomerContractItems(start_index: number, customer: Custo
     pk_id       = { customer_contract_id }
     sk          = { customer_id }
     gsi_1_sk    = { customer_name }
+    gsi_2_pk:   = { customer_contract_id }
     gsi_2_sk:   = { customer_name }
+    gsi_3_pk:   = { customer_contract_id }
+    gsi_3_sk:   = { contract_valid_to }
     */
 
    const dbItems = new Array<CustomerContract>();
@@ -33,7 +36,12 @@ export function getNewCustomerContractItems(start_index: number, customer: Custo
         contract_item.pk_id = customer_contract_id;
         contract_item.sk = customer.customer_id;
         contract_item.gsi_1_sk = customer.customer_name;
+
+        contract_item.gsi_2_pk = customer_contract_id;
         contract_item.gsi_2_sk = customer.customer_name;
+        contract_item.gsi_3_pk = customer_contract_id;
+        contract_item.gsi_3_sk = contract_item.contract_valid_to;
+
         contract_item.item_type_debug = "customer_contract";
 
         dbItems.push(contract_item);

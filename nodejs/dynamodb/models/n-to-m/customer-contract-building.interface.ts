@@ -7,7 +7,11 @@ export interface CustomerContractBuilding extends ItemBase {
     pk_id       = { customer_contract_id }
     sk          = { building_id }
     gsi_1_sk    = { building_place  }
+
+    gsi_2_pk:   = { building_place  }
     gsi_2_sk:   = { building_place  }
+    gsi_3_pk:   = { building_place  }
+    gsi_3_sk:   = { building_place  }
     */
 
     building_name:string;

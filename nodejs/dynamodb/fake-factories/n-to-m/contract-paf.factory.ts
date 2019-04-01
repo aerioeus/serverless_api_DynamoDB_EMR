@@ -1,6 +1,19 @@
 import { PriceAdjustmentFormula, CustomerContract, ContractPriceAdjustmentFormula, SupplierContract } from "../../models";
 import { getNewGuid, getCurrentDateTimeLikeAws } from "..";
 
+    /**
+     ItemBase overrides
+
+    pk_id       = { customer_contract_id }
+    sk          = { paf_id }
+    gsi_1_sk    = { paf_name }
+
+    gsi_2_pk:   = { paf_name }
+    gsi_2_sk:   = { paf_name }
+    gsi_3_pk:   = { paf_name }
+    gsi_3_sk:   = { paf_name }
+    */
+   
 export function getContractPafItem (
     pafItem: PriceAdjustmentFormula, 
     contractItem: CustomerContract | SupplierContract,
@@ -13,7 +26,12 @@ export function getContractPafItem (
         pk_id: id,
         sk: pafItem.paf_id,
         gsi_1_sk: pafItem.paf_name,
-        gsi_2_sk: pafItem.paf_description,
+
+        gsi_2_pk: pafItem.paf_name,
+        gsi_2_sk: pafItem.paf_name,
+        gsi_3_pk: pafItem.paf_name,
+        gsi_3_sk: pafItem.paf_name,
+
         paf_id: pafItem.paf_id,
         paf_name: pafItem.paf_name,
         paf_text: pafItem.paf_text,

@@ -17,7 +17,7 @@
     },
     {
         "ParameterKey": "NodeJsZipKey",
-        "ParameterValue": "ZipPathTimeStamp/nodejs.zip"
+        "ParameterValue": "node/nodejs.zip"
     },
     {
         "ParameterKey": "TestUserEmail",

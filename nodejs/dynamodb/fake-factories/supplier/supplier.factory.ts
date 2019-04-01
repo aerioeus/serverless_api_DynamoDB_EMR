@@ -8,7 +8,12 @@ import { Supplier } from '../../models/supplier/supplier.interface';
     pk_id       = { supplier_name }
     sk          = { supplier_id }
     gsi_1_sk    = { supplier_id }
-    gsi_2_sk:   = { supplier_id }
+
+    gsi_2_pk:   = { supplier_id }
+    gsi_2_sk:   = { supplier_industry_sector }
+    gsi_3_pk:   = { supplier_id }
+    gsi_3_sk:   = { supplier_id }
+
     */
 
 export function getNewSupplierItem(index:any): Supplier {
@@ -31,7 +36,13 @@ export function getNewSupplierItem(index:any): Supplier {
         pk_id: orgName,
         sk: supplier_id,
         gsi_1_sk: supplier_id,
-        gsi_2_sk: supplier_id,
+
+        gsi_2_pk: supplier_id,
+        gsi_2_sk: industry,
+        gsi_3_pk: supplier_id,
+        gsi_3_sk: supplier_id,
+
+
         item_type_debug: "supplier",
         supplier_id:	supplier_id,
         supplier_type: supplier_type,

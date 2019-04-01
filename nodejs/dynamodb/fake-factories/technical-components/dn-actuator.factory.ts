@@ -11,7 +11,11 @@ export function getNewDnActuatorItems(start_index: number, dn: PodDistributionNe
     pk_id       = { actuator_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
-    gsi_2_sk:   = { component_type }
+
+    gsi_2_pk:   = { component_type }
+    gsi_2_sk:   = { operating_principle }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { power_supply_voltage }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -26,7 +30,12 @@ export function getNewDnActuatorItems(start_index: number, dn: PodDistributionNe
             pk_id: actuator_id,
             sk: dn.distribution_network_id,
             gsi_1_sk: component_type,
-            gsi_2_sk: component_type,
+
+            gsi_2_pk: component_type,
+            gsi_2_sk: operating_principle,
+            gsi_3_pk: component_type,
+            gsi_3_sk: power_supply_voltage,
+
             component_type: component_type,
             item_type_debug: "actuator",
 

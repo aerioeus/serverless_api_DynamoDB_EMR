@@ -8,7 +8,11 @@ export interface BuildingRepair extends ItemBase{
     pk_id       = { building_id }
     sk          = { repair_id }
     gsi_1_sk    = { repair_date }
+
+    gsi_2_pk:   = { repair_date }
     gsi_2_sk:   = { repair_date }
+    gsi_3_pk:   = { repair_date }
+    gsi_3_sk:   = { repair_date }
     */
 
     repair_contractor: string,

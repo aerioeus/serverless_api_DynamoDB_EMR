@@ -11,7 +11,11 @@ export function getNewDnHydraulicSwitchItems(start_index: number, dn: PodDistrib
     pk_id       = { distribution_network_id }
     sk          = { hydraulic_switch_id }
     gsi_1_sk    = { component_type }
-    gsi_2_sk:   = { component_type}
+
+    gsi_2_pk:   = { component_type }
+    gsi_2_sk:   = { component_type }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -25,7 +29,12 @@ export function getNewDnHydraulicSwitchItems(start_index: number, dn: PodDistrib
             pk_id: hydraulic_switch_id,
             sk: dn.distribution_network_id,
             gsi_1_sk: component_type,
+
+            gsi_2_pk: component_type,
             gsi_2_sk: component_type,
+            gsi_3_pk: component_type,
+            gsi_3_sk: component_type,
+            
             item_type_debug: "hydraulic_switch",
 
             hydraulic_switch_id: hydraulic_switch_id,

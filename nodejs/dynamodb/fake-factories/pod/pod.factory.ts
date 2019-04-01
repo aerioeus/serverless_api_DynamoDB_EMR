@@ -7,8 +7,12 @@ import {Pod } from "../../models";
 
     pk_id       = { pod_id }
     sk          = { pod_id }
-    gsi_1_sk    = { pod_id }
-    gsi_2_sk:   = { pod_id }
+    gsi_1_sk    = { pod_street }
+
+    gsi_2_pk:   = { pod_id }
+    gsi_2_sk:   = { pod_address_zip_code }
+    gsi_3_pk:   = { pod_id }
+    gsi_3_sk:   = { pod_id }
     */
 
 export function getNewPodItem(index:any): Pod {
@@ -22,8 +26,13 @@ export function getNewPodItem(index:any): Pod {
         item_timestamp: getCurrentDateTimeLikeAws(),
         pk_id: pod_id,
         sk: pod_id,
-        gsi_1_sk: pod_id,
-        gsi_2_sk: pod_id,
+        gsi_1_sk: street,
+
+        gsi_2_pk: pod_id,
+        gsi_2_sk: zipcode,
+        gsi_3_pk: pod_id,
+        gsi_3_sk: pod_id,
+
         item_type_debug: "pod",
         pod_id: pod_id,
         pod_address: {

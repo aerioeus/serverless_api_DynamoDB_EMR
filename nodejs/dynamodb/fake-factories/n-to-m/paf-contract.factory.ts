@@ -6,15 +6,33 @@ export function getPafContractItem (
     pafItem: PriceAdjustmentFormula,
     isSupplier: boolean): PriceAdjustmentFormulaContract {
     
-    const id = isSupplier ? (<SupplierContract>contractItem).supply_contract_id : (<CustomerContract>contractItem).customer_contract_id;
+    /**
+     ItemBase overrides
+
+    pk_id       = { paf_id }
+    sk          = { customer_contract_id }
+    gsi_1_sk    = { customer_contract_id }
+
+    gsi_2_pk:   = { customer_contract_id }
+    gsi_2_sk:   = { customer_contract_id }
+    gsi_3_pk:   = { customer_contract_id }
+    gsi_3_sk:   = { customer_contract_id }
+
+    */
+
+    const contract_id = isSupplier ? (<SupplierContract>contractItem).supply_contract_id : (<CustomerContract>contractItem).customer_contract_id;
 
     let item = {
         item_id: getNewGuid(),
         item_timestamp: getCurrentDateTimeLikeAws(),
         pk_id: pafItem.paf_id,
-        sk: id ,
-        gsi_1_sk: id ,
-        gsi_2_sk: id ,
+        sk: contract_id ,
+        gsi_1_sk: contract_id,
+
+        gsi_2_pk: contract_id,
+        gsi_2_sk: contract_id ,
+        gsi_3_pk: contract_id ,
+        gsi_3_sk: contract_id ,
 
         contract_product: contractItem.contract_product,
         contract_start_date: contractItem.contract_start_date,

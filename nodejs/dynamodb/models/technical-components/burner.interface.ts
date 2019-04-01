@@ -8,7 +8,12 @@ export interface Burner extends TechnicalComponentBase
     pk_id       = { burner_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
+
     gsi_2_sk:   = { component_type }
+    gsi_2_sk:   = { operation_mode }
+    gsi_2_sk:   = { component_type }
+    gsi_2_sk:   = { capacity }
+
     */
 
     burner_id: string,

@@ -3,14 +3,18 @@ import { getCurrentDateTimeLikeAws, getRandomFloat, getRandom, getNewGuid, getRa
 import { Invoice } from "../../models/invoice/invoice.interface";
 import { Supplier } from "../../models/supplier/supplier.interface";
 
-/**
- ItemBase overrides
+    /**
+     ItemBase overrides
 
-pk_id       = { invoice_id }
-sk          = { pod_id }
-gsi_1_sk    = { invoice_due_date }
-gsi_2_sk:   = { invoice_supplier_id }
-*/
+    pk_id       = { invoice_id }
+    sk          = { pod_id }
+    gsi_1_sk    = { invoice_due_date }
+
+    gsi_2_pk:   = { invoice_id }
+    gsi_2_sk:   = { invoice_supplier_id }
+    gsi_3_pk:   = { invoice_supplier_id }
+    gsi_3_sk:   = { invoice_supplier_id }
+    */
 
 export function getNewInvoiceItem(index:any, pod: Pod, supplier: Supplier): Invoice {
 
@@ -23,7 +27,11 @@ export function getNewInvoiceItem(index:any, pod: Pod, supplier: Supplier): Invo
         pk_id: invoice_id,
         sk: pod.pod_id,
         gsi_1_sk: date,
-        gsi_2_sk: date,
+
+        gsi_2_pk: invoice_id,
+        gsi_2_sk: supplier.supplier_id,
+        gsi_3_pk: supplier.supplier_id,
+        gsi_3_sk: supplier.supplier_id,
 
         item_type_debug: "invoice",
 

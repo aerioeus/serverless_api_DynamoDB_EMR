@@ -13,7 +13,11 @@ export function getBuildingRepairItem (
     pk_id       = { building_id }
     sk          = { repair_id }
     gsi_1_sk    = { repair_date }
+
+    gsi_2_pk:   = { repair_date }
     gsi_2_sk:   = { repair_date }
+    gsi_3_pk:   = { repair_date }
+    gsi_3_sk:   = { repair_date }
     */
 
     let item = {
@@ -22,7 +26,13 @@ export function getBuildingRepairItem (
         pk_id: buildingItem.building_id,
         sk: repairItem.repair_id,
         gsi_1_sk: repairItem.repair_date,
+
+        gsi_2_pk: repairItem.repair_date,
         gsi_2_sk: repairItem.repair_date,
+        gsi_3_pk: repairItem.repair_date,
+        gsi_3_sk: repairItem.repair_date,
+
+
         item_type_debug:"building_repair",
         repair_contractor: repairItem.repair_contractor,
         repair_date: repairItem.repair_date,

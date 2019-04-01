@@ -11,7 +11,12 @@ export function getNewPodInspectionItems(start_index: any, pod: Pod, supplierCon
     pk_id       = { pod_id }
     sk          = { inspection_id }
     gsi_1_sk    = { supplier_contract_id }
+
+    gsi_2_pk:   = { supplier_contract_id}
     gsi_2_sk:   = { supplier_contract_id}
+    gsi_3_pk:   = { supplier_contract_id}
+    gsi_3_sk:   = { supplier_contract_id}
+    
     */
 
     for (let index = start_index; index < start_index + childCount; index++){
@@ -25,7 +30,12 @@ export function getNewPodInspectionItems(start_index: any, pod: Pod, supplierCon
             pk_id: pod.pod_id,
             sk: inspection_id,
             gsi_1_sk: supplierContract.supply_contract_id,
+
+            gsi_2_pk: supplierContract.supply_contract_id,
             gsi_2_sk: supplierContract.supply_contract_id,
+            gsi_3_pk: supplierContract.supply_contract_id,
+            gsi_3_sk: supplierContract.supply_contract_id,
+
             item_type_debug: "pod_inspection",
             inspection_id: inspection_id,
             inspection_company: inspection_company,

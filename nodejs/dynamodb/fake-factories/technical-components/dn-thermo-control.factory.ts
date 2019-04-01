@@ -10,7 +10,11 @@ export function getNewDnThermoControlItems(start_index: number, dn: PodDistribut
     pk_id       = { thermo_control_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
+
+    gsi_2_pk:   = { component_type }
     gsi_2_sk:   = { component_type }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -26,7 +30,12 @@ export function getNewDnThermoControlItems(start_index: number, dn: PodDistribut
             pk_id: thermo_control_id,
             sk: dn.distribution_network_id,
             gsi_1_sk: component_type,
+
+            gsi_2_pk: component_type,
             gsi_2_sk: component_type,
+            gsi_3_pk: component_type,
+            gsi_3_sk: component_type,
+            
             item_type_debug: "thermo_control",
 
             thermo_control_id: thermo_control_id,

@@ -2,14 +2,17 @@ import { getCurrentDateTimeLikeAws, oneOf, getRandomFloat, getRandom, getNewGuid
 import { fakeValueArrays } from '../fake-value.arrays';
 import { Building } from "../../models";
 
-/**
- ItemBase overrides
+    /**
+     ItemBase overrides
 
     pk_id       = { building_id }
     sk          = { building_place }
     gsi_1_sk    = { building_place  }
+    gsi_2_pk:   = { building_place  }
     gsi_2_sk:   = { building_place  }
-*/
+    gsi_3_pk:   = { building_place  }
+    gsi_3_sk:   = { building_place  }
+    */
 
 export function getNewBuildingItem(index:any): Building {
 
@@ -25,7 +28,10 @@ export function getNewBuildingItem(index:any): Building {
         pk_id: building_id,
         sk: building_place,
         gsi_1_sk: building_place,
+        gsi_2_pk: building_place,
         gsi_2_sk: building_place,
+        gsi_3_pk: building_place,
+        gsi_3_sk: building_place,
         item_type_debug: "building",
         building_id: building_id,
         building_name: `bilding #${building_id}`,

@@ -34,7 +34,13 @@ Resources:
           AttributeType: S
         - AttributeName: gsi_1_sk
           AttributeType: S
+        - AttributeName: gsi_2_pk
+          AttributeType: S
         - AttributeName: gsi_2_sk
+          AttributeType: S
+        - AttributeName: gsi_3_pk
+          AttributeType: S
+        - AttributeName: gsi_3_sk
           AttributeType: S
         - AttributeName: item_type_debug
           AttributeType: S
@@ -60,7 +66,7 @@ Resources:
             WriteCapacityUnits: !Ref WriteCapacityUnits
         - IndexName: Gsi2Index
           KeySchema:
-            - AttributeName: sk
+            - AttributeName: gsi_2_pk
               KeyType: HASH
             - AttributeName: gsi_2_sk
               KeyType: RANGE
@@ -69,15 +75,17 @@ Resources:
           ProvisionedThroughput:
             ReadCapacityUnits: !Ref ReadCapacityUnits
             WriteCapacityUnits: !Ref WriteCapacityUnits
-        # - IndexName: Gsi3Index
-        #   KeySchema:
-        #     - AttributeName: sk
-        #       KeyType: HASH
-        #   Projection:
-        #     ProjectionType: ALL
-        #   ProvisionedThroughput:
-        #     ReadCapacityUnits: !Ref ReadCapacityUnits
-        #     WriteCapacityUnits: !Ref WriteCapacityUnits
+        - IndexName: Gsi3Index
+          KeySchema:
+            - AttributeName: gsi_3_pk
+              KeyType: HASH
+            - AttributeName: gsi_3_sk
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: !Ref ReadCapacityUnits
+            WriteCapacityUnits: !Ref WriteCapacityUnits
         - IndexName: GsiDebugIndex
           KeySchema:
             - AttributeName: item_type_debug

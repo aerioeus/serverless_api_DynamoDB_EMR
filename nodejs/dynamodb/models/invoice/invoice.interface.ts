@@ -7,7 +7,11 @@ export interface Invoice extends ItemBase {
     pk_id       = { invoice_id }
     sk          = { pod_id }
     gsi_1_sk    = { invoice_due_date }
+
+    gsi_2_pk:   = { invoice_id }
     gsi_2_sk:   = { invoice_supplier_id }
+    gsi_3_pk:   = { invoice_supplier_id }
+    gsi_3_sk:   = { invoice_supplier_id }
     */
 
     invoice_id: string,

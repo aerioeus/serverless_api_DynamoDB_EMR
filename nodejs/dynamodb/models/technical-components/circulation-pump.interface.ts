@@ -7,7 +7,12 @@ export interface CirculationPump extends TechnicalComponentBase {
     pk_id       = { circulation_pump_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
+
+    gsi_2_pk:   = { component_type }
     gsi_2_sk:   = { component_type }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { component_type }
+
     */
     circulation_pump_id: string,
 

@@ -11,7 +11,11 @@ export function getNewPodMaintenanceItems(start_index: any, pod: Pod, supplierCo
     pk_id       = { pod_id }
     sk          = { maintenance_id }
     gsi_1_sk    = { supplier_contract_id }
-    gsi_2_sk:   = { supplier_contract_id }
+
+    gsi_2_pk:   = { pod_id }
+    gsi_2_sk:   = { maintainance_company }
+    gsi_3_pk:   = { pod_id }
+    gsi_3_sk:   = { maintainance_date }
     */
 
     for (let i = start_index; i < start_index + childCount; i++) {
@@ -25,7 +29,12 @@ export function getNewPodMaintenanceItems(start_index: any, pod: Pod, supplierCo
             pk_id: pod.pod_id,
             sk: maintenance_id,
             gsi_1_sk: supplierContract.supply_contract_id,
-            gsi_2_sk: supplierContract.supply_contract_id,
+
+            gsi_2_pk: pod.pod_id,
+            gsi_2_sk: maintenance_company,
+            gsi_3_pk: pod.pod_id,
+            gsi_3_sk: maintenance_date,
+
             item_type_debug: "pod_maintenance",
 
             maintainance_id: maintenance_id,

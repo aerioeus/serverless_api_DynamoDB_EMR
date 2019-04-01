@@ -7,8 +7,13 @@ export interface PodMaintenance extends ItemBase {
     pk_id       = { pod_id }
     sk          = { maintenance_id }
     gsi_1_sk    = { supplier_contract_id }
-    gsi_2_sk:   = { supplier_contract_id }
+
+    gsi_2_pk:   = { pod_id }
+    gsi_2_sk:   = { maintainance_company }
+    gsi_3_pk:   = { pod_id }
+    gsi_3_sk:   = { maintainance_date }
     */
+
     maintainance_id: string,
     maintainance_company: string,
     maintainance_date: string,

@@ -11,7 +11,11 @@ export function getNewDnBurnerItems(start_index: number, dn: PodDistributionNetw
     pk_id       = { burner_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
+
     gsi_2_sk:   = { component_type }
+    gsi_2_sk:   = { operation_mode }
+    gsi_2_sk:   = { component_type }
+    gsi_2_sk:   = { capacity }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -26,7 +30,12 @@ export function getNewDnBurnerItems(start_index: number, dn: PodDistributionNetw
             pk_id: burner_id,
             sk: dn.distribution_network_id,
             gsi_1_sk: component_type,
-            gsi_2_sk: component_type,
+
+            gsi_2_pk: component_type,
+            gsi_2_sk: operation_mode,
+            gsi_3_pk: component_type,
+            gsi_3_sk: capacity,
+            
             item_type_debug: "burner",
 
             burner_id: burner_id,

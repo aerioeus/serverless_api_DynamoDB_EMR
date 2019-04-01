@@ -37,7 +37,7 @@ import {
     getNewDnActuatorItems
 } from "./fake-factories";
 import { PriceAdjustmentFormula, Customer, Building, Pod, PodDistributionNetwork, Repair, SupplierContract, PodInspection, PodMaintenance } from "./models";
-import { ItemBase } from "./models/base";
+import { ItemBase, TechnicalComponentBase } from "./models/base";
 import { Supplier } from "./models/supplier/supplier.interface";
 import { getNewInvoiceItem } from "./fake-factories/invoice/invoice.factory";
 import { getBuildingRepairItem } from "./fake-factories/n-to-m/building-repair.factory";
@@ -189,7 +189,7 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     dataCollections.set("distribution_network", dns.length);
 
     //create technical components and repaires
-    const components = new Map<string, ItemBase[]>();
+    const components = new Map<string, TechnicalComponentBase[]>();
     const repairs = new Array<Repair>();
 
     //actuators
@@ -264,11 +264,11 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     dataCollections.set("invoice", invoices.length);
 
     // insert components, create repairs for each of them 
-    components.forEach((valueArray: ItemBase[], key: string)=> {
+    components.forEach((valueArray: TechnicalComponentBase[], key: string)=> {
         addArrayToDb(valueArray, dynamoDbTableName, insertItem, insertDelay);
         dataCollections.set(key, valueArray.length);
 
-        valueArray.forEach((comp: ItemBase, ind: number) => {
+        valueArray.forEach((comp: TechnicalComponentBase, ind: number) => {
             const distributionNetworkId = comp.sk;
             const dn = dns.find(d => d.pk_id === distributionNetworkId);
 
@@ -307,7 +307,6 @@ const fillTable = function (dynamoDbTableName: string, idSeedStart: number, elem
     const paf_buildings = getManyToManyRecordsInternal(pafsPerBuilding, pafs, buildings, getPafBuildingItem);
     addArrayToDb(paf_buildings, dynamoDbTableName, insertItem, insertDelay);
     dataCollections.set("paf_building", paf_buildings.length);
-
 
     console.log("Item counts");
     console.log(dataCollections);
@@ -474,24 +473,3 @@ function getManyToManyRecordsInternal<T1, T2, T3>(
 
     return childRecords;
 }
-
-// function getChildRecordsInternal<T1, T2>(
-//     idSeedStart : number, 
-//     elemCount: number, 
-//     parents: T1[], 
-//     createChildInternalFunc: (index: number, parent: T1) => T2): T2[] {
-//     const childRecords = [];
-
-//     for (let i = idSeedStart; i < idSeedStart + elemCount; i++){
-//         const contract = createChildInternalFunc(i++, oneOf(parents));
-//         childRecords.push(contract);
-//     }
-
-//     return childRecords;
-// }
-
-
-// function insertChildParentItem <T1 extends ItemBase, T2 extends ItemBase>(item: ChildParentInternal<T1, T2>, dynamoDbTableName: string)  {
-//     addItemToDb(item.db_item, dynamoDbTableName, dynamoDoc);
-//     addItemToDb(item.parent_db_item, dynamoDbTableName, dynamoDoc);
-// }

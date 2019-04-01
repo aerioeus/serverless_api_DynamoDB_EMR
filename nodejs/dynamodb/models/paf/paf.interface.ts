@@ -7,6 +7,10 @@ export interface PriceAdjustmentFormula extends ItemBase, PriceAdjustmentFormula
     pk_id       = { paf_id }
     sk          = { paf_id }
     gsi_1_sk    = { paf_id }
+
+    gsi_2_pk:   = { paf_id }
     gsi_2_sk:   = { paf_id }
+    gsi_3_pk:   = { paf_id }
+    gsi_3_sk:   = { paf_id }
     */
 }

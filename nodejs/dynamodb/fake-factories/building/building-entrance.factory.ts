@@ -8,7 +8,10 @@ import { fakeValueArrays } from "../fake-value.arrays";
     pk_id       = { building_id }
     sk          = { entrance_id }
     gsi_1_sk    = { entrance_id }
-    gsi_2_sk:   = { entrance_id }
+    gsi_2_pk:   = { building_id  }
+    gsi_2_sk:   = { entrance_street }
+    gsi_3_pk:   = { building_place }
+    gsi_3_sk:   = { building_place }
     */
 
 export function getNewBuildingEntranceItems(start_Index: any, building: Building, childCount: number): BuildingEntrance[] {
@@ -25,7 +28,11 @@ export function getNewBuildingEntranceItems(start_Index: any, building: Building
             pk_id: building.building_id,
             sk: entrance_id,
             gsi_1_sk: entrance_id,
-            gsi_2_sk: entrance_id,
+            gsi_2_pk: building.building_id,
+            gsi_2_sk: entrance_street,
+            gsi_3_pk: entrance_id,
+            gsi_3_sk: entrance_id,
+
             item_type_debug: "building_entrance",
             entrance_id: entrance_id,
             entrance_description: `Description of entrance #${entrance_id}`,

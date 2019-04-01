@@ -11,13 +11,17 @@ export function getNewDnBoilerItems(start_index: number, dn: PodDistributionNetw
     pk_id       = { boiler_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
-    gsi_2_sk:   = { component_type }
+
+    gsi_2_pk:   = { component_type }
+    gsi_2_sk:   = { boiler_efficiency }
+    gsi_3_pk:   = { distribution_network_id | component_type }
+    gsi_3_sk:   = { fuel_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
         const boiler_id = `Boiler_${i}`;
         const fuel_category = oneOf(fakeValueArrays.fuel_categories);
-        const boiler_efficency = `${50+getRandom(50)}%`;
+        const boiler_efficiency = `${50+getRandom(50)}%`;
         const component_type = 'boiler';
 
         const dbItem = {
@@ -26,7 +30,12 @@ export function getNewDnBoilerItems(start_index: number, dn: PodDistributionNetw
             pk_id: boiler_id,
             sk: dn.distribution_network_id,
             gsi_1_sk: component_type,
-            gsi_2_sk: component_type,
+
+            gsi_2_pk: component_type,
+            gsi_2_sk: boiler_efficiency,
+            gsi_3_pk: `${dn.distribution_network_id} | ${component_type}`,
+            gsi_3_sk: fuel_category,
+
             item_type_debug: "boiler",
             boiler_id: boiler_id,
 
@@ -46,7 +55,7 @@ export function getNewDnBoilerItems(start_index: number, dn: PodDistributionNetw
             boiler_info: {
                 fuel_category: fuel_category,
                 boiler_type: oneOf(["Niedertemperatur", "Brennwert"]),
-                boiler_efficency: boiler_efficency,
+                boiler_efficency: boiler_efficiency,
                 interface_protocol: "proprietary protocol",
                 burner_intern: oneOf(["yes","no"]),
                 max_capacity: `${400+getRandom(400)} kW`,

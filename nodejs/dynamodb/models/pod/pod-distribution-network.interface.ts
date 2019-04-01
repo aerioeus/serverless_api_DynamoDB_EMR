@@ -7,8 +7,13 @@ export interface PodDistributionNetwork extends ItemBase {
     pk_id       = { distribution_network_id }
     sk          = { pod_id }
     gsi_1_sk    = { distribution_network_id }
+
+    gsi_2_pk:   = { distribution_network_id }
     gsi_2_sk:   = { distribution_network_id }
+    gsi_3_pk:   = { distribution_network_id }
+    gsi_3_sk:   = { distribution_network_id }
     */
+   
    distribution_network_id: string,
    distribution_network_type: string,
    distribution_network_name: string,

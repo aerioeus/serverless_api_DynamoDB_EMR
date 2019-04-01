@@ -7,7 +7,11 @@ export interface WaterStorage extends TechnicalComponentBase {
     pk_id       = { water_storage_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
+
+    gsi_2_pk:   = { component_type }
     gsi_2_sk:   = { component_type }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { component_type }
     */
 
     water_storage_id: string,

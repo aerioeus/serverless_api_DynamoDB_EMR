@@ -11,7 +11,11 @@ export function getNewDnDistrictHeatingStationItems(start_index: number, dn: Pod
     pk_id       = { district_heating_station_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
+
+    gsi_2_pk:   = { component_type }
     gsi_2_sk:   = { component_type }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -27,7 +31,11 @@ export function getNewDnDistrictHeatingStationItems(start_index: number, dn: Pod
             pk_id: district_heating_station_id,
             sk: dn.distribution_network_id,
             gsi_1_sk: component_type,
+
+            gsi_2_pk: component_type,
             gsi_2_sk: component_type,
+            gsi_3_pk: component_type,
+            gsi_3_sk: component_type,
             item_type_debug: "district_heating_station",
 
             district_heating_station_id: district_heating_station_id,

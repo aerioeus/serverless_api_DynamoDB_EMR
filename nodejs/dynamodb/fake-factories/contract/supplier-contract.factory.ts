@@ -9,7 +9,10 @@ import { Supplier } from "../../models/supplier/supplier.interface";
     pk_id       = { supply_contract_id }
     sk          = { supplier_id }
     gsi_1_sk    = { supplier_name }
-    gsi_2_sk:   = { supplier_name }
+    gsi_2_pk:   = { supplier_id }
+    gsi_2_sk:   = { supplier_industry_sector }
+    gsi_3_pk:   = { supplier_name }
+    gsi_3_sk:   = { supplier_name }
     */
 
 export function getNewSupplierContractItems(start_index: number, supplier: Supplier, childCount: number): SupplierContract[] { 
@@ -34,7 +37,12 @@ export function getNewSupplierContractItems(start_index: number, supplier: Suppl
          contract_item.pk_id = supply_contract_id;
          contract_item.sk = supplier.supplier_id;
          contract_item.gsi_1_sk = supplier.supplier_name;
-         contract_item.gsi_2_sk = supplier.supplier_name;
+
+         contract_item.gsi_2_pk = supplier.supplier_id;
+         contract_item.gsi_2_sk = supplier.supplier_industry_sector;
+         contract_item.gsi_3_pk = supplier.supplier_name;
+         contract_item.gsi_3_sk = supplier.supplier_name;
+
          contract_item.item_type_debug = "SupplierContract";
  
          dbItems.push(contract_item);

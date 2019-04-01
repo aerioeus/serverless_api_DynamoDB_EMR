@@ -7,7 +7,12 @@ export interface Repair extends ItemBase {
     pk_id       = { repair_id }
     sk          = { invoice_id }
     gsi_1_sk    = { component_id }
-    gsi_2_sk:   = { component_id }
+
+    gsi_2_pk:   = { component_type }
+    gsi_2_sk:   = { repair_date }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { repair_scope }
+
     */
 
     repair_id: string,

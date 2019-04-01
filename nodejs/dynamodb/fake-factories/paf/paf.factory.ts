@@ -8,7 +8,11 @@ import { fakeValueArrays } from '../fake-value.arrays';
     pk_id       = { paf_id }
     sk          = { paf_id }
     gsi_1_sk    = { paf_id }
+
+    gsi_2_pk:   = { paf_id }
     gsi_2_sk:   = { paf_id }
+    gsi_3_pk:   = { paf_id }
+    gsi_3_sk:   = { paf_id }
     */
 
 export function getNewPafItem(index:any): PriceAdjustmentFormula {
@@ -21,7 +25,12 @@ export function getNewPafItem(index:any): PriceAdjustmentFormula {
         pk_id: paf_id,
         sk: paf_id,
         gsi_1_sk: paf_id,
+
+        gsi_2_pk: paf_id,
         gsi_2_sk: paf_id,
+        gsi_3_pk: paf_id,
+        gsi_3_sk: paf_id,
+
         paf_id: paf_id,
         item_type_debug: "paf",
         paf_name: `Formula ${index}`,

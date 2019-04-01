@@ -10,7 +10,11 @@ export function getNewDnWaterStorageItems(start_index: number, dn: PodDistributi
     pk_id       = { water_storage_id }
     sk          = { distribution_network_id }
     gsi_1_sk    = { component_type }
+
+    gsi_2_pk:   = { component_type }
     gsi_2_sk:   = { component_type }
+    gsi_3_pk:   = { component_type }
+    gsi_3_sk:   = { component_type }
     */
 
     for (let i = start_index; i < start_index + childCount; i++){
@@ -24,8 +28,13 @@ export function getNewDnWaterStorageItems(start_index: number, dn: PodDistributi
             item_timestamp: getCurrentDateTimeLikeAws(),
             pk_id: dn.distribution_network_id,
             sk: water_storage_id,
-            gsi_1_sk: storage_type ,
-            gsi_2_sk: circuit_type,
+            gsi_1_sk: storage_type,
+            
+            gsi_2_pk: component_type,
+            gsi_2_sk: component_type,
+            gsi_3_pk: component_type,
+            gsi_3_sk: component_type,
+            
             item_type_debug: "water_storage",
 
             water_storage_id: water_storage_id,

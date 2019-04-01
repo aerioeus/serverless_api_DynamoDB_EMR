@@ -6,8 +6,12 @@ export interface Pod extends ItemBase {
 
     pk_id       = { pod_id }
     sk          = { pod_id }
-    gsi_1_sk    = { pod_id }
-    gsi_2_sk:   = { pod_id }
+    gsi_1_sk    = { pod_street }
+
+    gsi_2_pk:   = { pod_id }
+    gsi_2_sk:   = { pod_address_zip_code }
+    gsi_3_pk:   = { pod_id }
+    gsi_3_sk:   = { pod_id }
     */
     pod_id: string,
     pod_address: {

@@ -11,8 +11,13 @@ export function getNewPodDistributionNetworkItems(start_index: any, pod: Pod, ch
     pk_id       = { distribution_network_id }
     sk          = { pod_id }
     gsi_1_sk    = { distribution_network_id }
+
+    gsi_2_pk:   = { distribution_network_id }
     gsi_2_sk:   = { distribution_network_id }
+    gsi_3_pk:   = { distribution_network_id }
+    gsi_3_sk:   = { distribution_network_id }
     */
+
     for (let i = start_index; i < start_index + childCount; i++){
         const distribution_network_id = `DN_${i}`;
         const hydraulic_circuite_type = oneOf(fakeValueArrays.hydraulic_circuite_types);
@@ -24,7 +29,12 @@ export function getNewPodDistributionNetworkItems(start_index: any, pod: Pod, ch
             pk_id: distribution_network_id,
             sk: pod.pod_id,
             gsi_1_sk: distribution_network_id,
+
+            gsi_2_pk: distribution_network_id,
             gsi_2_sk: distribution_network_id,
+            gsi_3_pk: distribution_network_id,
+            gsi_3_sk: distribution_network_id,
+
             item_type_debug: "distribution_network",
 
             distribution_network_id: distribution_network_id,

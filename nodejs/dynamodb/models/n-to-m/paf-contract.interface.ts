@@ -10,6 +10,11 @@ export interface PriceAdjustmentFormulaContract extends ItemBase, ContractBase {
     pk_id       = { paf_id }
     sk          = { customer_contract_id }
     gsi_1_sk    = { customer_contract_id }
+
+    gsi_2_pk:   = { customer_contract_id }
     gsi_2_sk:   = { customer_contract_id }
+    gsi_3_pk:   = { customer_contract_id }
+    gsi_3_sk:   = { customer_contract_id }
+
     */
 }
